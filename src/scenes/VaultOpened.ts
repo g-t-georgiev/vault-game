@@ -1,4 +1,4 @@
-import { Assets, IDestroyOptions } from "pixi.js";
+import { Assets } from "pixi.js";
 import Scene from "../core/Scene";
 
 import Background from '../prefabs/Background';
