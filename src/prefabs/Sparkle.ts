@@ -19,13 +19,14 @@ export default class Sparkle extends Sprite {
     
         const initialScale = 0.5 + Math.random() * 0.5;
         this.scale.set(initialScale);
+
         this.rotation = Math.random() * Math.PI * 2;
     
         const tl = gsap.timeline({
             paused: true,
             repeat: -1,
             repeatDelay: 2 + Math.random(),
-            defaults: { ease: "sine.inOut" }
+            defaults: { ease: 'sine.inOut' }
         });
     
         tl
@@ -36,22 +37,22 @@ export default class Sparkle extends Sprite {
             .to(this, {
                 rotation: `+=${0.3 + Math.random() * 0.3}`,
                 duration: 0.5
-            }, "<")
+            }, '<')
             .to(this.scale, {
                 x: initialScale + 0.2,
                 y: initialScale + 0.2,
                 duration: 0.5
-            }, "<")
+            }, '<')
             .to(this, {
                 alpha: 0.7,
                 duration: 0.35,
                 yoyo: true,
                 repeat: 1
-            }, "<+0.3")
+            }, '<+0.3')
             .to(this, {
                 alpha: 0,
                 duration: 1
-            }, ">0.1");
+            }, '>0.1');
     
         const initialDelay = Math.random() * 3;
         gsap.delayedCall(initialDelay, () => tl.play());
