@@ -1,5 +1,5 @@
-import { Sprite } from "pixi.js";
-import { centerObjects } from "../utils/misc";
+import { Sprite } from 'pixi.js';
+import { centerObjects } from '../utils/misc';
 
 export default class Background extends Sprite {
 

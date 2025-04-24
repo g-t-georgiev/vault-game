@@ -1,4 +1,4 @@
-import { Assets, Sprite, Container } from "pixi.js";
+import { Assets, Sprite, Container } from 'pixi.js';
 
 export default class DoorOpened extends Container {
 

@@ -1,5 +1,5 @@
-import { Sprite, Texture, BLEND_MODES } from "pixi.js";
-import gsap from "gsap";
+import { Sprite, Texture, BLEND_MODES } from 'pixi.js';
+import gsap from 'gsap';
 
 export default class Sparkle extends Sprite {
 

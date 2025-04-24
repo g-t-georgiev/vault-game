@@ -1,5 +1,5 @@
-import SceneManager from "./core/SceneManager";
+import SceneManager from './core/SceneManager';
 
 const sceneManager = new SceneManager();
 
-await sceneManager.switchScene("VaultClosed");
+await sceneManager.switchScene('VaultClosed');

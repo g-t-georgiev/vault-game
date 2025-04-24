@@ -1,13 +1,13 @@
-import { Assets } from "pixi.js";
-import Scene from "../core/Scene";
+import { Assets } from 'pixi.js';
+import Scene from '../core/Scene';
 
 import Background from '../prefabs/Background';
-import DoorClosed from "../prefabs/DoorClosed";
-import DoorHandle from "../prefabs/DoorHandle";
+import DoorClosed from '../prefabs/DoorClosed';
+import DoorHandle from '../prefabs/DoorHandle';
 
 export default class VaultClosed extends Scene {
 
-    name = "VaultClosed";
+    name = 'VaultClosed';
 
     private mainBackgr!: Background;
     private doorClosed!: DoorClosed;
@@ -15,7 +15,7 @@ export default class VaultClosed extends Scene {
 
 	async load(): Promise<void> {
 
-		await this.utils.assetLoader.loadAssetsGroup("VaultClosed");
+		await this.utils.assetLoader.loadAssetsGroup('VaultClosed');
 
         this.mainBackgr = new Background(Assets.get('bg'));
         this.doorClosed = new DoorClosed(Assets.get('door'));

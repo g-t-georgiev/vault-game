@@ -1,13 +1,13 @@
-import { Assets } from "pixi.js";
-import Scene from "../core/Scene";
+import { Assets } from 'pixi.js';
+import Scene from '../core/Scene';
 
 import Background from '../prefabs/Background';
-import DoorOpened from "../prefabs/DoorOpened";
-import Sparkle from "../prefabs/Sparkle";
+import DoorOpened from '../prefabs/DoorOpened';
+import Sparkle from '../prefabs/Sparkle';
 
 export default class VaultOpened extends Scene {
 
-    name = "VaultOpened";
+    name = 'VaultOpened';
 
     private mainBackgr!: Background;
     private doorOpened!: DoorOpened;
@@ -15,7 +15,7 @@ export default class VaultOpened extends Scene {
 
     async load(): Promise<void> {
 
-        await this.utils.assetLoader.loadAssetsGroup("VaultOpened");
+        await this.utils.assetLoader.loadAssetsGroup('VaultOpened');
 
         this.mainBackgr = new Background(Assets.get('bg'));
         this.doorOpened = new DoorOpened();
