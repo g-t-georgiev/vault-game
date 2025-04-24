@@ -6,9 +6,11 @@ export default class Sparkle extends Sprite {
     private animationTl!: GSAPTimeline;
 
     constructor(texture: Texture) {
+
         super(texture);
-        this.blendMode = BLEND_MODES.ADD;
+
         this.anchor.set(0.5);
+        this.blendMode = BLEND_MODES.ADD;
     }
 
     playAnimation() {
