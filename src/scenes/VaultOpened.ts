@@ -22,22 +22,13 @@ export default class VaultOpened extends Scene {
         this.doorOpened.position.set(1460, -15);
 
         this.sparkles = Array.from({ length: 3 }, (_, i) => {
-            let sparkle: Sparkle = new Sparkle(Assets.get('blink'));
-            sparkle.anchor.set(0.5);
-
-            switch (i) {
-                case 0: {
-                    sparkle.position.set(-75, -15);
-                    break;
-                }
-                case 1: {
-                    sparkle.position.set(-500, -15);
-                    break;
-                }
-                case 2: {
-                    sparkle.position.set(170, 330);
-                    break;
-                }
+            let sparkle = new Sparkle(Assets.get('blink'));
+            if (i == 0) {
+                sparkle.position.set(-75, -15);
+            } else if (i == 1) {
+                sparkle.position.set(-500, -15);
+            } else {
+                sparkle.position.set(170, 330);
             }
             return sparkle;
         });
