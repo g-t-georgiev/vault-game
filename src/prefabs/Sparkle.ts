@@ -14,6 +14,7 @@ export default class Sparkle extends Sprite {
     }
 
     playAnimation() {
+
         this.alpha = 0;
     
         const initialScale = 0.5 + Math.random() * 0.5;
