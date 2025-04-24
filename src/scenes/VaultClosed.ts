@@ -28,6 +28,7 @@ export default class VaultClosed extends Scene {
 
         this.doorClosed.addChild(this.doorHandle);
         this.mainBackgr.addChild(this.doorClosed);
+
         this.addChild(this.mainBackgr);
 	}
 
@@ -36,6 +37,7 @@ export default class VaultClosed extends Scene {
 	}
 
 	onResize(width: number, height: number) {
-		
+		if (!this.mainBackgr) return;
+        this.mainBackgr.resize(width, height);
 	}
 }
