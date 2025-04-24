@@ -13,7 +13,7 @@ export default class VaultOpened extends Scene {
     private doorOpened!: DoorOpened;
     private sparkles!: Sparkle[];
 
-    async load() {
+    async load(): Promise<void> {
 
         await this.utils.assetLoader.loadAssetsGroup("VaultOpened");
 
@@ -38,7 +38,7 @@ export default class VaultOpened extends Scene {
         this.addChild(this.mainBackgr);
     }
 
-    async start() {
+    async start(): Promise<void> {
         this.sparkles.forEach(sparkle => sparkle.playAnimation());
     }
 

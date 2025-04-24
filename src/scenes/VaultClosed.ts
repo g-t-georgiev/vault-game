@@ -13,7 +13,7 @@ export default class VaultClosed extends Scene {
     private doorClosed!: DoorClosed;
     private doorHandle!: DoorHandle;
 
-	async load() {
+	async load(): Promise<void> {
 
 		await this.utils.assetLoader.loadAssetsGroup("VaultClosed");
 
@@ -32,11 +32,11 @@ export default class VaultClosed extends Scene {
         this.addChild(this.mainBackgr);
 	}
 
-	async start() {
+	async start(): Promise<void> {
 
 	}
 
-	onResize(width: number, height: number) {
+	onResize(width: number, height: number): void {
 		if (!this.mainBackgr) return;
         this.mainBackgr.resize(width, height);
 	}
