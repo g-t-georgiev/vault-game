@@ -19,12 +19,11 @@ export default class VaultClosed extends Scene {
 
         this.mainBackgr = new Background(Assets.get('bg'));
         this.doorClosed = new DoorClosed(Assets.get('door'));
-        this.doorHandle = new DoorHandle(Assets.get('handle'));
+        this.doorHandle = new DoorHandle();
 
         this.doorClosed.anchor.set(0.5);
         this.doorClosed.position.set(55, -35);
 
-        this.doorHandle.anchor.set(0.5);
         this.doorHandle.position.set(-92, -5);
 
         this.mainBackgr.resize(window.innerWidth, window.innerHeight);
