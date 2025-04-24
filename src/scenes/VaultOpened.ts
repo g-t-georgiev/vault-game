@@ -2,28 +2,27 @@ import { Assets } from "pixi.js";
 import Scene from "../core/Scene";
 
 import Background from '../prefabs/Background';
-import DoorClosed from "../prefabs/DoorClosed";
+import DoorOpened from "../prefabs/DoorOpened";
 
 export default class VaultOpened extends Scene {
 
     name = "VaultOpened";
 
     private mainBackgr!: Background;
-    private doorClosed!: DoorClosed;
+    private doorOpened!: DoorOpened;
 
     async load() {
 
         await this.utils.assetLoader.loadAssetsGroup("VaultOpened");
 
         this.mainBackgr = new Background(Assets.get('bg'));
-        this.doorClosed = new DoorClosed(Assets.get('door'));
+        this.doorOpened = new DoorOpened();
 
-        this.doorClosed.anchor.set(0.5);
-        this.doorClosed.position.set(55, -35);
+        this.doorOpened.position.set(1460, -15);
 
         this.mainBackgr.resize(window.innerWidth, window.innerHeight);
 
-        this.mainBackgr.addChild(this.doorClosed);
+        this.mainBackgr.addChild(this.doorOpened);
 
         this.addChild(this.mainBackgr);
     }
