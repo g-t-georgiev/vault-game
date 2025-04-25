@@ -5,6 +5,8 @@ import Background from '../prefabs/Background';
 import DoorClosed from '../prefabs/DoorClosed';
 import DoorHandle from '../prefabs/DoorHandle';
 
+import Timer from '../utils/Timer';
+
 export default class VaultClosed extends Scene {
 
     name = 'VaultClosed';
@@ -12,6 +14,8 @@ export default class VaultClosed extends Scene {
     private mainBackgr!: Background;
     private doorClosed!: DoorClosed;
     private doorHandle!: DoorHandle;
+
+    private timer!: Timer;
 
 	async load(): Promise<void> {
 
@@ -33,7 +37,10 @@ export default class VaultClosed extends Scene {
 	}
 
 	async start(): Promise<void> {
-
+        this.timer = Timer.getInstance();
+        this.timer.addUpdateCallback((elapsedMS) => {
+            console.log(elapsedMS / 1000);
+        });
 	}
 
 	onResize(width: number, height: number): void {
