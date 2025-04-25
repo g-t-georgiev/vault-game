@@ -4,7 +4,7 @@ export default class Timer {
 
     private static _instance?: Timer;
 
-    static getInstance(ticker: Ticker): Timer {
+    static getInstance(ticker?: Ticker): Timer {
         if (!this._instance) {
             if (!ticker) throw new Error('Invalid ticker argument');
             this._instance = new this(ticker);
