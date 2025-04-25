@@ -6,7 +6,10 @@ export default class Timer {
 
     static getInstance(ticker: Ticker): Timer {
         if (!this._instance) {
+            if (!ticker) throw new Error('Invalid ticker argument');
             this._instance = new this(ticker);
+        } else if (ticker && ticker !== this._instance.ticker) {
+            throw new Error('Timer already initialized with a Ticker instance.');
         }
         return this._instance;
     }
@@ -14,7 +17,7 @@ export default class Timer {
     private ticker!: Ticker;
     private callbacks: Set<(elapsedTime: number) => void> = new Set();
     private running: boolean = false;
-    private elapsedSeconds: number = 0;
+    private elapsedMS: number = 0;
     
     private constructor(ticker: Ticker) {
         this.ticker = ticker;
@@ -38,35 +41,33 @@ export default class Timer {
 
     start(): void {
         if (this.running || this.callbacks.size === 0) return;
-        this.elapsedSeconds = 0;
+        this.elapsedMS = 0;
         this.running = true;
     }
 
     resume(): void {
-        if (this.running) return;
         this.running = true;
     }
 
     pause(): void {
-        if (!this.running) return;
         this.running = false;
     }
 
     stop(): void {
-        if (!this.running) return;
         this.pause();
-        this.elapsedSeconds = 0;
+        this.elapsedMS = 0;
     }
 
     destroy(): void {
         this.stop();
         this.callbacks.clear();
         this.ticker.remove(this.update, this);
+        Timer._instance = undefined;
     }
 
     private update(): void {
         if (!this.running || this.callbacks.size === 0) return;
-        this.elapsedSeconds += this.ticker.elapsedMS * 1000;
-        this.callbacks.forEach(callback => callback(this.elapsedSeconds));
+        this.elapsedMS += this.ticker.elapsedMS;
+        [ ...this.callbacks ].forEach(cb => cb(this.elapsedMS));
     }
 }
