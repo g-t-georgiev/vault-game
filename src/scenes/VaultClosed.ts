@@ -43,6 +43,10 @@ export default class VaultClosed extends Scene {
         });
 	}
 
+    async unload() {
+        this.timer.destroy();
+    }
+
 	onResize(width: number, height: number): void {
 		if (!this.mainBackgr) return;
         this.mainBackgr.resize(width, height);
