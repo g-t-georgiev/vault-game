@@ -5,13 +5,13 @@ type TimerUpdateCallback = (elapsedMS: number) => void;
 export default class Timer {
 
     private static _instance?: Timer;
-
-    static getInstance(ticker?: Ticker): Timer {
+    
+    public static config: Record<string,any> = {};
+    public static getInstance(): Timer {
         if (!this._instance) {
-            if (!ticker) throw new Error('Invalid ticker argument');
-            this._instance = new this(ticker);
-        } else if (ticker && ticker !== this._instance.ticker) {
-            throw new Error('Timer already initialized with a Ticker instance.');
+            if (!this.config) throw new Error('Missing config');
+            if (!this.config.ticker) throw new Error('Mission ticker in the config');
+            this._instance = new this(this.config.ticker);
         }
         return this._instance;
     }
