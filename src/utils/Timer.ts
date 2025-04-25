@@ -1,5 +1,7 @@
 import { Ticker } from 'pixi.js';
 
+type TimerUpdateCallback = (elapsedMS: number) => void;
+
 export default class Timer {
 
     private static _instance?: Timer;
@@ -15,7 +17,7 @@ export default class Timer {
     }
 
     private ticker!: Ticker;
-    private callbacks: Set<(elapsedTime: number) => void> = new Set();
+    private callbacks: Set<TimerUpdateCallback> = new Set();
     private running: boolean = false;
     private elapsedMS: number = 0;
     
@@ -23,7 +25,7 @@ export default class Timer {
         this.ticker = ticker;
     }
 
-    addUpdateCallback(callback: (elapsedTime: number) => void) {
+    addUpdateCallback(callback: TimerUpdateCallback) {
         if (!this.callbacks.has(callback)) {
             if (this.callbacks.size === 0) 
                 this.ticker.add(this.update, this);
@@ -31,7 +33,7 @@ export default class Timer {
         }
     }
 
-    removeUpdateCallback(callback: (elapsedTime: number) => void) {
+    removeUpdateCallback(callback: TimerUpdateCallback) {
         if (this.callbacks.has(callback)) {
             this.callbacks.delete(callback);
             if (this.callbacks.size === 0) 
