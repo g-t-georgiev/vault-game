@@ -4,6 +4,8 @@ export default class DoorHandle extends Container {
 
     private handle!: Sprite;
     private handleShadow!: Sprite;
+    private handleShadowOffset = { x: 20, y: 35 };
+    private handleShadowRotationEffect = 10;
 
     constructor() {
         super();
@@ -11,7 +13,14 @@ export default class DoorHandle extends Container {
         this.handle.anchor.set(0.5);
         this.handleShadow = new Sprite(Assets.get('handleShadow'));
         this.handleShadow.anchor.set(0.5);
-        this.handleShadow.position.set(20, 35);
+        this.handleShadow.position.set(this.handleShadowOffset.x, this.handleShadowOffset.y);
         this.addChild(this.handleShadow, this.handle);
+    }
+
+    onRotate() {
+        this.handleShadow.position.set(
+            this.handleShadowOffset.x + Math.sin(this.rotation) * this.handleShadowRotationEffect,
+            this.handleShadowOffset.y + Math.cos(this.rotation) * this.handleShadowRotationEffect
+        );
     }
 }
