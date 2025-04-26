@@ -10,6 +10,7 @@ export interface Scene {
 }
 
 export abstract class Scene extends Container {
+	
 	abstract name: string;
 
 	constructor(protected utils: SceneUtils) {
