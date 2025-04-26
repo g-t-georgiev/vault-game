@@ -1,11 +1,11 @@
 import { Assets, Container, Sprite, Graphics } from 'pixi.js';
+import gsap from 'gsap';
 
 import Scene from '../core/Scene';
 
 import { Locked, Unlocked } from '../states/vault/index';
 import Background from '../prefabs/Background';
 import Button from '../prefabs/Button';
-import { centerObjects } from '../utils/misc';
 
 enum VaultState {
     Locked = 'Locked',
