@@ -1,12 +1,19 @@
 import { Assets, Container } from 'pixi.js';
+import gsap from 'gsap';
 
 import Door from '../../prefabs/DoorClosed';
 import Handle from '../../prefabs/DoorHandle';
+import Button from '../../prefabs/Button';
+
+const R2D = 180 / Math.PI;
+const D2R = Math.PI / 180;
+const ROTATION_STEP = 60 * D2R;
 
 export class Locked extends Container {
 
     private door!: Door;
     private handle!: Handle;
+    private rotateHandleBtns!: Container;
 
     load(): void {
 
@@ -19,6 +26,29 @@ export class Locked extends Container {
 
         this.door.addChild(this.handle);
 
-        this.addChild(this.door);
+        this.rotateHandleBtns = new Container();
+        let rotateHandleToLeftBtn = new Button('counterclockwise', 0, 0, 75);
+        rotateHandleToLeftBtn.on('pointertap', this.rotateHandleCounterClockwise, this);
+        rotateHandleToLeftBtn.x -= 350;
+        let rotateHandleToRightBtn = new Button('clockwise', 0, 0, 75);
+        rotateHandleToRightBtn.on('pointertap', this.rotateHandleClockwise, this);
+        rotateHandleToRightBtn.x += 290;
+        this.rotateHandleBtns.addChild(rotateHandleToLeftBtn, rotateHandleToRightBtn);
+
+        this.addChild(this.door, this.rotateHandleBtns);
+    }
+
+    private rotateHandleCounterClockwise() {
+        this.rotateHandle(-ROTATION_STEP);
+    }
+
+    private rotateHandleClockwise() {
+        this.rotateHandle(ROTATION_STEP);
+    }
+
+    private rotateHandle(step: number) {
+        const currentRotation = this.handle.rotation;
+        const targetRotation = Math.round((currentRotation + step) / ROTATION_STEP) * ROTATION_STEP;
+        gsap.to(this.handle, { rotation: targetRotation, duration: 0.15, ease: 'power2.out' });
     }
 }
