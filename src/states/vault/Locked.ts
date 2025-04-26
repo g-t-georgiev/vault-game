@@ -5,7 +5,7 @@ import Door from '../../prefabs/DoorClosed';
 import Handle from '../../prefabs/DoorHandle';
 import Button from '../../prefabs/Button';
 
-const R2D = 180 / Math.PI;
+// const R2D = 180 / Math.PI;
 const D2R = Math.PI / 180;
 const ROTATION_STEP = 60 * D2R;
 
@@ -49,6 +49,12 @@ export class Locked extends Container {
     private rotateHandle(step: number) {
         const currentRotation = this.handle.rotation;
         const targetRotation = Math.round((currentRotation + step) / ROTATION_STEP) * ROTATION_STEP;
-        gsap.to(this.handle, { rotation: targetRotation, duration: 0.15, ease: 'power2.out' });
+        gsap.to(this.handle, { 
+            rotation: targetRotation, 
+            duration: 0.3, 
+            ease: 'power2.out', 
+            onUpdate: this.handle.onRotate.bind(this.handle), 
+            onUpdateParams: [this.handle.rotation]
+        });
     }
 }
