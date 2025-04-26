@@ -1,6 +1,8 @@
 import { Assets, Container } from 'pixi.js';
 import gsap from 'gsap';
 
+import { Debug } from '../../utils/debug';
+
 import Door from '../../prefabs/DoorClosed';
 import Handle from '../../prefabs/DoorHandle';
 import Button from '../../prefabs/Button';
@@ -14,6 +16,7 @@ export class Locked extends Container {
     private door!: Door;
     private handle!: Handle;
     private rotateHandleBtns!: Container;
+    private vaultOpenCombination!: (number | string)[][];
 
     load(): void {
 
@@ -26,6 +29,7 @@ export class Locked extends Container {
 
         this.door.addChild(this.handle);
 
+        this.generateOpenCombination();
         this.rotateHandleBtns = new Container();
         let rotateHandleToLeftBtn = new Button('counterclockwise', 0, 0, 75);
         rotateHandleToLeftBtn.on('pointertap', this.rotateHandleCounterClockwise, this);
@@ -36,6 +40,19 @@ export class Locked extends Container {
         this.rotateHandleBtns.addChild(rotateHandleToLeftBtn, rotateHandleToRightBtn);
 
         this.addChild(this.door, this.rotateHandleBtns);
+    }
+
+    private generateOpenCombination() {
+        this.vaultOpenCombination = [];
+        for (let i = 0; i < 3; i++) {
+            let displacement = Math.floor(Math.random() * 9) + 1;
+            let direction = Math.random() < 0.5 ? 'clockwise' : 'counterclockwise';
+            this.vaultOpenCombination.push([displacement, direction]);
+        }
+        console.log(
+            '[SECRET COMBINATION]',
+            this.vaultOpenCombination.map((step) => step.join(' ')).join(', ')
+        );
     }
 
     private rotateHandleCounterClockwise() {
