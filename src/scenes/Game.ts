@@ -1,4 +1,4 @@
-import { Assets, Container, Sprite, Graphics } from 'pixi.js';
+import { Assets, Container } from 'pixi.js';
 
 import Scene from '../core/Scene';
 
