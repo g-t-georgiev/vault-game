@@ -18,10 +18,17 @@
 				background-color: #f0f0f0;
 				overflow: hidden;
 			}
+			.preload-font{
+				font-family: 'Share Tech Mono', monospace;
+				position: absolute;
+				visibility: hidden;
+				opacity: 0;
+			}
 		</style>
 	</head>
 	<body>
 		<canvas id="app"></canvas>
+		<span class="preload-font">Test</span>
 		<script type="module" src="/src/main.ts"></script>
 	</body>
 </html>
