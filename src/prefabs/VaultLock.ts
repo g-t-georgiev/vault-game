@@ -21,9 +21,9 @@ export default class VaultLock {
     }
 
     constructor(params?: Partial<{ 
-        onInit: () => void, 
-        onReset: () => void,
-        onUnlock: () => void
+        onInit: () => Promise<void> | void, 
+        onReset: () => Promise<void> | void,
+        onUnlock: () => Promise<void> | void
     }>) {
         this.prng = new PRNG();
         this._isUnlocked = false;
@@ -34,24 +34,24 @@ export default class VaultLock {
         }
     }
 
-    init() {
+    async init() {
         this._isUnlocked = false;
         this.combinationPairIndex = 0;
         this.accumulatedSteps = 0;
         this.setUnlockCombination();
-        if (typeof this.onInit == 'function') this.onInit();
+        if (typeof this.onInit == 'function') await this.onInit();
     }
 
-    reset() {
+    async reset() {
         this._isUnlocked = false;
         this.combinationPairIndex = 0;
         this.accumulatedSteps = 0;
         this.setUnlockCombination();
-        if (typeof this.onReset == 'function') this.onReset();
+        if (typeof this.onReset == 'function') await this.onReset();
     }
 
-    tryToUnlock(step: number = 1, direction: HandleRotationDirection = 'clockwise') {
-        
+    async tryToUnlock(step: number = 1, direction: HandleRotationDirection = 'clockwise') {
+
         let [steps, dir] = this.unlockCombination[this.combinationPairIndex];
 
         if (direction !== dir) {
@@ -64,7 +64,7 @@ export default class VaultLock {
             this.combinationPairIndex++;
             if (this.combinationPairIndex >= this.unlockCombination.length) {
                 this._isUnlocked = true;
-                if (typeof this.onUnlock == 'function') this.onUnlock();
+                if (typeof this.onUnlock == 'function') await this.onUnlock();
             }
         }
     }
