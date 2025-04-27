@@ -5,6 +5,9 @@ import Door from '../../prefabs/DoorClosed';
 import Handle from '../../prefabs/DoorHandle';
 import Button from '../../prefabs/Button';
 
+type HandleRotationDirection = 'clockwise' | 'counterclockwise';
+type VaultOpenCombination = [displacement: number, direction: HandleRotationDirection][];
+
 // const R2D = 180 / Math.PI;
 const D2R = Math.PI / 180;
 const ROTATION_STEP = 60 * D2R;
@@ -14,7 +17,7 @@ export class Locked extends Container {
     private door!: Door;
     private handle!: Handle;
     private rotateHandleBtns!: Container;
-    private vaultOpenCombination!: (number | string)[][];
+    private vaultOpenCombination!: VaultOpenCombination;
 
     load(): void {
 
@@ -44,7 +47,7 @@ export class Locked extends Container {
         this.vaultOpenCombination = [];
         for (let i = 0; i < 3; i++) {
             let displacement = Math.floor(Math.random() * 9) + 1;
-            let direction = Math.random() < 0.5 ? 'clockwise' : 'counterclockwise';
+            let direction: HandleRotationDirection = Math.random() < 0.5 ? 'clockwise' : 'counterclockwise';
             this.vaultOpenCombination.push([displacement, direction]);
         }
         console.log(
