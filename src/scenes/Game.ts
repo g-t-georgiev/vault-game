@@ -1,6 +1,7 @@
-import { Assets, Container } from 'pixi.js';
+import { Assets } from 'pixi.js';
 
 import Scene from '../core/Scene';
+import { BaseState } from '../core/State';
 
 import { Locked, Unlocked } from '../states/vault/index';
 import Background from '../prefabs/Background';
@@ -10,21 +11,17 @@ enum VaultState {
     Unlocked = 'Unlocked'
 }
 
-interface State {
-    load(): void,
-    update(elapsedMS: number): void,
-    unload(): void
-};
+type VaultStates = {
+    [VaultState.Locked]: Locked,
+    [VaultState.Unlocked]: Unlocked
+}
 
 export default class Game extends Scene {
 
     name: string = 'Game';
 
-    private states = {
-        Locked: new Locked(),
-        Unlocked: new Unlocked()
-    };
-    private currentState!: null | Container & Partial<State>;
+    private states!: VaultStates;
+    private currentState!: null | BaseState;
 
     private mainContainer!: Background;
 
@@ -33,11 +30,11 @@ export default class Game extends Scene {
         this.mainContainer = new Background(Assets.get('bg'));
         this.mainContainer.resize(window.innerWidth, window.innerHeight);
         this.addChild(this.mainContainer);
+        this.states = {
+            Locked: new Locked({ requestStateChange: this.switchState.bind(this) }),
+            Unlocked: new Unlocked({ requestStateChange: this.switchState.bind(this) })
+        };
         this.switchState(VaultState.Locked);
-    }
-
-    async start() {
-
     }
 
     update(elapsedMS: number) {
