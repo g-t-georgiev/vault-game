@@ -8,6 +8,7 @@ import Handle from '../../prefabs/DoorHandle';
 import Button from '../../prefabs/Button';
 
 import VaultLock from '../../prefabs/VaultLock';
+import Timer from '../../prefabs/Timer';
 
 // const R2D = 180 / Math.PI;
 const D2R = Math.PI / 180;
@@ -20,9 +21,12 @@ export class Locked extends State {
     private rotateHandleBtns!: Container;
 
     private vaultLock!: VaultLock;
+    private timer!: Timer;
 
     constructor(utils: IStateUtils) {
         super(utils);
+
+        this.timer = Timer.getInstance();
 
         this.door = new Door(Assets.get('door'));
         this.door.anchor.set(0.5);
@@ -55,9 +59,12 @@ export class Locked extends State {
                 gsap.killTweensOf(this.handle);
                 this.handle.interactive = true;
                 this.handle.eventMode = 'static';
+                this.timer.reset();
+                this.timer.start();
             },
             onUnlock: async () => {
                 console.log('VAULT_LOCK_UNLOCKED');
+                this.timer.stop();
                 this.utils.requestStateChange('Unlocked');
             }
         });
