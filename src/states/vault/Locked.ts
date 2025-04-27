@@ -1,8 +1,6 @@
 import { Assets, Container } from 'pixi.js';
 import gsap from 'gsap';
 
-import { Debug } from '../../utils/debug';
-
 import Door from '../../prefabs/DoorClosed';
 import Handle from '../../prefabs/DoorHandle';
 import Button from '../../prefabs/Button';
@@ -50,7 +48,7 @@ export class Locked extends Container {
             this.vaultOpenCombination.push([displacement, direction]);
         }
         console.log(
-            '[SECRET COMBINATION]',
+            '%c [SECRET COMBINATION]', 'color:#ff0000',
             this.vaultOpenCombination.map((step) => step.join(' ')).join(', ')
         );
     }
