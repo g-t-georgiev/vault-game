@@ -50,6 +50,8 @@ export class Locked extends State {
             onReset: async () => {
                 console.log('VAULT_LOCK_RESET');
                 this.rotateHandleFast(6, 1);
+                gsap.killTweensOf(this.handle);
+
             },
             onUnlock: async () => {
                 console.log('VAULT_LOCK_UNLOCKED');
@@ -62,6 +64,10 @@ export class Locked extends State {
 
     async load(): Promise<void> {
         await (this.vaultLock.isUnlocked ? this.vaultLock.reset() : this.vaultLock.init());
+    }
+
+    async unload(): Promise<void> {
+        gsap.killTweensOf(this.handle);
     }
 
     private async rotateHandleCounterClockwise() {

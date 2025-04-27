@@ -38,4 +38,8 @@ export class Unlocked extends State {
         await wait(5);
         this.utils.requestStateChange('Locked');
     }
+
+    async unload(): Promise<void> {
+        this.particles.forEach(glitter => glitter.killAnimation());
+    }
 }
