@@ -6,9 +6,8 @@ export default class Glitter extends Sprite {
     private animationTl!: GSAPTimeline;
 
     constructor(texture: Texture) {
-
         super(texture);
-
+        this.alpha = 0;
         this.anchor.set(0.5);
         this.blendMode = BLEND_MODES.ADD;
     }
@@ -16,10 +15,8 @@ export default class Glitter extends Sprite {
     playAnimation() {
 
         this.alpha = 0;
-    
         const initialScale = 0.5 + Math.random() * 0.5;
         this.scale.set(initialScale);
-
         this.rotation = Math.random() * Math.PI * 2;
     
         const tl = gsap.timeline({
