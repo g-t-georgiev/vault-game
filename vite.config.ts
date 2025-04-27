@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: process.env.NODE_ENV == 'production' ? '/vault-game/' : '/',
+  base: process.env.VITE_BASE_URL == 'production' ? '/vault-game/' : '/',
   build: {
     target: "esnext",
     rollupOptions: {
