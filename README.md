@@ -1,7 +1,7 @@
 # Vault Game
 ## 🎮 Simple 2D Game Framework for [PixiJS](https://pixijs.com) using [Vite⚡](https://vitejs.dev/)
 
-<a href="https://g-t-georgiev.github.io/vault-game/" target="_blank">Demo</a>
+<a href="https://g-t-georgiev.github.io/vault-game/" target="_blank">Github Pages Demo</a>
 
 ### Commands 💻
 
