@@ -53,10 +53,10 @@ export default class Game extends Scene {
             this.timer = Timer.getInstance();
             this.timer.position.set(-1300, -170);
             this.mainContainer.addChild(this.timer);
-            this.timer.start();
         } else {
             this.timer.reset();
         }
+        this.timer.start();
     }
 
     async unload() {
