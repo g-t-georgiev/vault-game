@@ -49,9 +49,12 @@ export class Locked extends State {
             },
             onReset: async () => {
                 console.log('VAULT_LOCK_RESET');
-                this.rotateHandleFast(6, 1);
+                this.handle.interactive = false;
+                this.handle.eventMode = 'none';
+                await this.rotateHandleFast(6, 1);
                 gsap.killTweensOf(this.handle);
-
+                this.handle.interactive = true;
+                this.handle.eventMode = 'static';
             },
             onUnlock: async () => {
                 console.log('VAULT_LOCK_UNLOCKED');
