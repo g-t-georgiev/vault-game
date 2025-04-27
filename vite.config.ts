@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  base: '/vault-gam/',
   build: {
     target: "esnext",
     rollupOptions: {
