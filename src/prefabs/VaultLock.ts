@@ -1,30 +1,37 @@
 import { PRNG } from "../utils/prng";
 
-export type HandleRotationDirection = 'clockwise' | 'counterclockwise';
-export type VaultOpenCombination = [displacement: number, direction: HandleRotationDirection][];
+export type HandleRotationDirection = "clockwise" | "counterclockwise";
+export type VaultOpenCombination = [
+  displacement: number,
+  direction: HandleRotationDirection
+][];
 
 export default class VaultLock {
-
-    private unlockCombination!: [displacement: number, direction: HandleRotationDirection][];
-    private combinationPairIndex: number = 0;
-    private accumulatedSteps: number = 0;
+    private unlockCombination!: [
+    displacement: number,
+    direction: HandleRotationDirection
+  ][];
+    private combinationPairIndex = 0;
+    private accumulatedSteps = 0;
 
     private onInit?: () => void;
     private onReset?: () => void;
     private onUnlock?: () => void;
 
-    protected _isUnlocked: boolean = false;
+    protected _isUnlocked = false;
 
     public prng!: PRNG;
     public get isUnlocked() {
         return this._isUnlocked;
     }
 
-    constructor(params?: Partial<{ 
-        onInit: () => Promise<void> | void, 
-        onReset: () => Promise<void> | void,
-        onUnlock: () => Promise<void> | void
-    }>) {
+    constructor(
+        params?: Partial<{
+      onInit: () => Promise<void> | void;
+      onReset: () => Promise<void> | void;
+      onUnlock: () => Promise<void> | void;
+    }>
+    ) {
         this.prng = new PRNG();
         this._isUnlocked = false;
         if (params) {
@@ -39,7 +46,7 @@ export default class VaultLock {
         this.combinationPairIndex = 0;
         this.accumulatedSteps = 0;
         this.setUnlockCombination();
-        if (typeof this.onInit == 'function') await this.onInit();
+        if (typeof this.onInit == "function") await this.onInit();
     }
 
     async reset() {
@@ -47,12 +54,14 @@ export default class VaultLock {
         this.combinationPairIndex = 0;
         this.accumulatedSteps = 0;
         this.setUnlockCombination();
-        if (typeof this.onReset == 'function') await this.onReset();
+        if (typeof this.onReset == "function") await this.onReset();
     }
 
-    async tryToUnlock(step: number = 1, direction: HandleRotationDirection = 'clockwise') {
-
-        let [steps, dir] = this.unlockCombination[this.combinationPairIndex];
+    async tryToUnlock(
+        step = 1,
+        direction: HandleRotationDirection = "clockwise"
+    ) {
+        const [steps, dir] = this.unlockCombination[this.combinationPairIndex];
 
         if (direction !== dir) {
             return this.reset();
@@ -64,7 +73,7 @@ export default class VaultLock {
             this.combinationPairIndex++;
             if (this.combinationPairIndex >= this.unlockCombination.length) {
                 this._isUnlocked = true;
-                if (typeof this.onUnlock == 'function') await this.onUnlock();
+                if (typeof this.onUnlock == "function") await this.onUnlock();
             }
         }
     }
@@ -72,13 +81,15 @@ export default class VaultLock {
     private setUnlockCombination() {
         this.unlockCombination = [];
         for (let i = 0; i < 3; i++) {
-            let displacement = Math.floor(this.prng.next() * 9) + 1;
-            let direction: HandleRotationDirection = this.prng.next() < 0.5 ? 'clockwise' : 'counterclockwise';
+            const displacement = Math.floor(this.prng.next() * 9) + 1;
+            const direction: HandleRotationDirection =
+        this.prng.next() < 0.5 ? "clockwise" : "counterclockwise";
             this.unlockCombination.push([displacement, direction]);
         }
         console.log(
-            '%c [SECRET COMBINATION]', 'color:#ff0000',
-            this.unlockCombination.map((step) => step.join(' ')).join(', ')
+            "%c [SECRET COMBINATION]",
+            "color:#ff0000",
+            this.unlockCombination.map((step) => step.join(" ")).join(", ")
         );
     }
 }

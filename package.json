@@ -19,6 +19,7 @@
     "vite": "^6.3.2"
   },
   "dependencies": {
+    "@pixi/events": "^7.4.3",
     "@pixi/sound": "^5.2.0",
     "gsap": "^3.11.4",
     "pixi-spine": "^4.0.4",
