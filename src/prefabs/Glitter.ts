@@ -3,13 +3,14 @@ import gsap from 'gsap';
 
 export default class Glitter extends Sprite {
 
-    private animationTl!: GSAPTimeline;
+    private animationTl!: GSAPTimeline | null;
 
     constructor(texture: Texture) {
         super(texture);
         this.alpha = 0;
         this.anchor.set(0.5);
         this.blendMode = BLEND_MODES.ADD;
+        this.animationTl = null;
     }
 
     playAnimation() {
@@ -22,7 +23,7 @@ export default class Glitter extends Sprite {
         const tl = gsap.timeline({
             paused: true,
             repeat: -1,
-            repeatDelay: 2 + Math.random(),
+            repeatDelay: 1 + Math.random(),
             defaults: { ease: 'sine.inOut' }
         });
     
@@ -51,11 +52,22 @@ export default class Glitter extends Sprite {
                 duration: 1
             }, '>0.1');
     
-        const initialDelay = Math.random() * 3;
+        const initialDelay = Math.random() * 1;
         gsap.delayedCall(initialDelay, () => tl.play());
     
+        if (this.animationTl) {
+            this.animationTl.kill();
+            this.animationTl = null;
+        }
+
         this.animationTl = tl;
         return this.animationTl;
     }
     
+    killAnimation() {
+        if (this.animationTl) {
+            this.animationTl.kill();
+            this.animationTl = null;
+        }
+    }
 }
