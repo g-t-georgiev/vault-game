@@ -1,4 +1,4 @@
-import { Assets } from 'pixi.js';
+import { Assets, Container, Graphics, Text } from 'pixi.js';
 
 import { SceneUtils } from '../core/SceneManager';
 import Scene from '../core/Scene';
@@ -7,6 +7,7 @@ import { BaseState } from '../core/State';
 import { Locked, Unlocked } from '../states/vault/index';
 
 import Background from '../prefabs/Background';
+import Timer from '../prefabs/Timer';
 
 enum VaultState {
     Locked = 'Locked',
@@ -21,6 +22,8 @@ type VaultStates = {
 export default class Game extends Scene {
 
     name: string = 'Game';
+
+    private timer!: Timer;
 
     private states!: VaultStates;
     private currentState!: null | BaseState;
@@ -45,9 +48,25 @@ export default class Game extends Scene {
             };
         }
         this.switchState(VaultState.Locked);
+
+        if (!this.timer) {
+            this.timer = Timer.getInstance();
+            this.timer.position.set(-1300, -170);
+            this.mainContainer.addChild(this.timer);
+            this.timer.start();
+        } else {
+            this.timer.reset();
+        }
+    }
+
+    async unload() {
+        Timer.removeInstance();
     }
 
     update(elapsedMS: number) {
+
+        this.timer.update(elapsedMS);
+
         if (typeof this.currentState?.update == 'function')
             this.currentState.update(elapsedMS);
     }
@@ -67,9 +86,10 @@ export default class Game extends Scene {
         let nextState = Object.entries(this.states).find(([s]) => s === state)?.[1];
         if (nextState) {
             this.currentState = nextState;
-            if (typeof this.currentState?.load == 'function')
+            if (typeof this.currentState?.load == 'function') {
                 this.currentState.load();
-            this.mainContainer.addChild(this.currentState);
+                this.mainContainer.addChild(this.currentState);
+            }
         }
     }
 }
