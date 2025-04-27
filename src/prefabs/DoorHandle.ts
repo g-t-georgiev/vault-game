@@ -18,6 +18,7 @@ export default class DoorHandle extends Container {
     }
 
     onRotate() {
+        // TODO: Modify shadow offset to be more realistic during rotation
         this.handleShadow.position.set(
             this.handleShadowOffset.x + Math.sin(this.rotation) * this.handleShadowRotationEffect,
             this.handleShadowOffset.y + Math.cos(this.rotation) * this.handleShadowRotationEffect
