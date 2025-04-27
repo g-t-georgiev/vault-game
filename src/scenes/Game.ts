@@ -1,9 +1,11 @@
 import { Assets } from 'pixi.js';
 
+import { SceneUtils } from '../core/SceneManager';
 import Scene from '../core/Scene';
-import { BaseState } from '../core/State';
 
+import { BaseState } from '../core/State';
 import { Locked, Unlocked } from '../states/vault/index';
+
 import Background from '../prefabs/Background';
 
 enum VaultState {
@@ -25,15 +27,23 @@ export default class Game extends Scene {
 
     private mainContainer!: Background;
 
+    constructor(utils: SceneUtils) {
+        super(utils);
+    }
+
     async load() {
         await this.utils.assetLoader.loadAssetsGroup('Game');
-        this.mainContainer = new Background(Assets.get('bg'));
-        this.mainContainer.resize(window.innerWidth, window.innerHeight);
-        this.addChild(this.mainContainer);
-        this.states = {
-            Locked: new Locked({ requestStateChange: this.switchState.bind(this) }),
-            Unlocked: new Unlocked({ requestStateChange: this.switchState.bind(this) })
-        };
+        if (!this.mainContainer) {
+            this.mainContainer = new Background(Assets.get('bg'));
+            this.mainContainer.resize(window.innerWidth, window.innerHeight);
+            this.addChild(this.mainContainer);
+        }
+        if (!this.states) {
+            this.states = {
+                Locked: new Locked({ requestStateChange: this.switchState.bind(this) }),
+                Unlocked: new Unlocked({ requestStateChange: this.switchState.bind(this) })
+            };
+        }
         this.switchState(VaultState.Locked);
     }
 
