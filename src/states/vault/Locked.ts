@@ -43,15 +43,15 @@ export class Locked extends State {
         this.rotateHandleBtns.addChild(rotateHandleToLeftBtn, rotateHandleToRightBtn);
 
         this.vaultLock = new VaultLock({
-            onInit: () => {
+            onInit: async () => {
                 console.log('VAULT_LOCK_INIT');
                 this.handle.rotation = 0;
             },
-            onReset: () => {
+            onReset: async () => {
                 console.log('VAULT_LOCK_RESET');
-                this.handle.rotation = 0;
+                this.rotateHandleFast(6, 1);
             },
-            onUnlock: () => {
+            onUnlock: async () => {
                 console.log('VAULT_LOCK_UNLOCKED');
                 this.utils.requestStateChange('Unlocked');
             }
@@ -60,18 +60,18 @@ export class Locked extends State {
         this.addChild(this.door, this.rotateHandleBtns);
     }
 
-    load(): void {
-        this.vaultLock.isUnlocked ? this.vaultLock.reset() : this.vaultLock.init();
+    async load(): Promise<void> {
+        await (this.vaultLock.isUnlocked ? this.vaultLock.reset() : this.vaultLock.init());
     }
 
     private async rotateHandleCounterClockwise() {
         await this.rotateHandle(-ROTATION_STEP);
-        this.vaultLock.tryToUnlock(1, 'counterclockwise');
+        await this.vaultLock.tryToUnlock(1, 'counterclockwise');
     }
 
     private async rotateHandleClockwise() {
         await this.rotateHandle(ROTATION_STEP);
-        this.vaultLock.tryToUnlock(1, 'clockwise');
+        await this.vaultLock.tryToUnlock(1, 'clockwise');
     }
 
     private async rotateHandle(step: number) {
@@ -81,6 +81,20 @@ export class Locked extends State {
             rotation: targetRotation, 
             duration: 0.3, 
             ease: 'power2.out', 
+            onUpdate: this.handle.onRotate.bind(this.handle), 
+            onUpdateParams: [this.handle.rotation]
+        });
+    }
+
+    private async rotateHandleFast(rounds: number, duration: number) {
+        const currentRotation = this.handle.rotation;
+        const fullRotation = Math.PI * 2;
+        const normalizedRotation = currentRotation % fullRotation;
+        const targetRotation = currentRotation + fullRotation * rounds - normalizedRotation;
+        return gsap.to(this.handle, {
+            rotation: targetRotation,
+            duration: duration,
+            ease: 'power2.out',
             onUpdate: this.handle.onRotate.bind(this.handle), 
             onUpdateParams: [this.handle.rotation]
         });
