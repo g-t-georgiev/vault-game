@@ -1,6 +1,8 @@
 import { Assets, Container } from 'pixi.js';
 import gsap from 'gsap';
 
+import State, { IStateUtils } from '../../core/State';
+
 import Door from '../../prefabs/DoorClosed';
 import Handle from '../../prefabs/DoorHandle';
 import Button from '../../prefabs/Button';
@@ -14,7 +16,7 @@ type VaultOpenCombination = [displacement: number, direction: HandleRotationDire
 const D2R = Math.PI / 180;
 const ROTATION_STEP = 60 * D2R;
 
-export class Locked extends Container {
+export class Locked extends State {
 
     private door!: Door;
     private handle!: Handle;
@@ -23,7 +25,10 @@ export class Locked extends Container {
     private prng!: PRNG;
     private vaultOpenCombination!: VaultOpenCombination;
 
-    load(): void {
+    constructor(utils: IStateUtils) {
+        super(utils);
+
+        this.prng = new PRNG();
 
         this.door = new Door(Assets.get('door'));
         this.door.anchor.set(0.5);
@@ -33,9 +38,6 @@ export class Locked extends Container {
         this.handle.position.set(-92, -5);
 
         this.door.addChild(this.handle);
-
-        this.prng = new PRNG();
-        this.generateOpenCombination();
 
         this.rotateHandleBtns = new Container();
         let rotateHandleToLeftBtn = new Button('counterclockwise', 0, 0, 75);
@@ -47,6 +49,11 @@ export class Locked extends Container {
         this.rotateHandleBtns.addChild(rotateHandleToLeftBtn, rotateHandleToRightBtn);
 
         this.addChild(this.door, this.rotateHandleBtns);
+    }
+
+    load(): void {
+
+        this.generateOpenCombination();
     }
 
     private generateOpenCombination() {
@@ -63,6 +70,7 @@ export class Locked extends Container {
     }
 
     private rotateHandleCounterClockwise() {
+        console.log(this.vaultOpenCombination);
         this.rotateHandle(-ROTATION_STEP);
     }
 

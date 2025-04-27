@@ -1,14 +1,17 @@
-import { Assets, Container } from 'pixi.js';
+import { Assets } from 'pixi.js';
+
+import State, { IStateUtils } from '../../core/State';
 
 import Door from '../../prefabs/DoorOpened';
 import Glitter from '../../prefabs/Glitter';
 
-export class Unlocked extends Container {
+export class Unlocked extends State {
 
     private door!: Door;
     private particles!: Glitter[];
 
-    load(): void {
+    constructor(utils: IStateUtils) {
+        super(utils);
 
         this.door = new Door();
         this.door.position.set(1460, -15);
@@ -26,6 +29,10 @@ export class Unlocked extends Container {
         });
 
         this.addChild(this.door, ...this.particles);
-        this.particles.forEach(glitter => glitter.playAnimation())
+    } 
+
+    load(): void {
+
+        this.particles.forEach(glitter => glitter.playAnimation());
     }
 }
