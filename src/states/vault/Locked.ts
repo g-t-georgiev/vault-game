@@ -5,6 +5,8 @@ import Door from '../../prefabs/DoorClosed';
 import Handle from '../../prefabs/DoorHandle';
 import Button from '../../prefabs/Button';
 
+import { PRNG } from '../../utils/prng';
+
 type HandleRotationDirection = 'clockwise' | 'counterclockwise';
 type VaultOpenCombination = [displacement: number, direction: HandleRotationDirection][];
 
@@ -17,6 +19,8 @@ export class Locked extends Container {
     private door!: Door;
     private handle!: Handle;
     private rotateHandleBtns!: Container;
+
+    private prng!: PRNG;
     private vaultOpenCombination!: VaultOpenCombination;
 
     load(): void {
@@ -30,7 +34,9 @@ export class Locked extends Container {
 
         this.door.addChild(this.handle);
 
+        this.prng = new PRNG();
         this.generateOpenCombination();
+
         this.rotateHandleBtns = new Container();
         let rotateHandleToLeftBtn = new Button('counterclockwise', 0, 0, 75);
         rotateHandleToLeftBtn.on('pointertap', this.rotateHandleCounterClockwise, this);
@@ -46,8 +52,8 @@ export class Locked extends Container {
     private generateOpenCombination() {
         this.vaultOpenCombination = [];
         for (let i = 0; i < 3; i++) {
-            let displacement = Math.floor(Math.random() * 9) + 1;
-            let direction: HandleRotationDirection = Math.random() < 0.5 ? 'clockwise' : 'counterclockwise';
+            let displacement = Math.floor(this.prng.next() * 9) + 1;
+            let direction: HandleRotationDirection = this.prng.next() < 0.5 ? 'clockwise' : 'counterclockwise';
             this.vaultOpenCombination.push([displacement, direction]);
         }
         console.log(
