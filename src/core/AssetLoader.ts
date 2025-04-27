@@ -69,7 +69,8 @@ export default class AssetLoader {
                 category,
                 name,
                 ext,
-                url: assetPath.replace(/.*public/, ""),
+                // url: assetPath.replace(/.*public/, ""),
+                url: `${import.meta.env.BASE_URL}${assetPath.replace(/.*public\//, "")}`
             });
         });
 
