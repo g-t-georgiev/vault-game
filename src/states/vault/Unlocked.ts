@@ -5,6 +5,8 @@ import State, { IStateUtils } from '../../core/State';
 import Door from '../../prefabs/DoorOpened';
 import Glitter from '../../prefabs/Glitter';
 
+import { wait } from '../../utils/misc';
+
 export class Unlocked extends State {
 
     private door!: Door;
@@ -31,8 +33,9 @@ export class Unlocked extends State {
         this.addChild(this.door, ...this.particles);
     } 
 
-    load(): void {
-
+    async load(): Promise<void> {
         this.particles.forEach(glitter => glitter.playAnimation());
+        await wait(5);
+        this.utils.requestStateChange('Locked');
     }
 }
