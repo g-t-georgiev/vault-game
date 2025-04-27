@@ -43,9 +43,18 @@ export class PRNG {
      * const randomValue = prng.next();  // e.g., 0.123456789
      */
     next(): number {
-        let t = this.seed += 0x6D2B79F5;
-        t = Math.imul(t ^ t >>> 15, t | 1);
-        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+
+        // random number generation using `Math.random`
+        // return Math.random();
+
+        // seeded random number generation
+        const x = Math.sin(this.seed++) * 10000;
+        return x - Math.floor(x);
+
+        // seeded random number generation using mulberry32 algorithm
+        // let t = this.seed += 0x6D2B79F5;
+        // t = Math.imul(t ^ t >>> 15, t | 1);
+        // t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        // return ((t ^ t >>> 14) >>> 0) / 4294967296;
     }
 }
