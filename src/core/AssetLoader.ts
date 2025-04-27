@@ -13,7 +13,7 @@ type Asset = {
 export default class AssetLoader {
 
     private assetFileUrls = this.importAssetFiles();
-    private baseUrl = import.meta.env.BASE_URL;
+    private baseUrl = import.meta.env.VITE_BASE_URL || '/';
 
     manifest: Asset[];
 
@@ -71,8 +71,7 @@ export default class AssetLoader {
                 category,
                 name,
                 ext,
-                // url: assetPath.replace(/.*public/, ""),
-                url: `${this.baseUrl}${assetPath.replace(/.*public\//, "")}`
+                url: `${this.baseUrl}${assetPath.replace(/.*public\//, "")}`,
             });
         });
 
