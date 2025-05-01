@@ -1,9 +1,10 @@
 import { Assets, Sprite, Container, DisplayObject } from 'pixi.js';
 
 export default class DoorHandle extends Container {
+
     private handle!: Sprite;
     private handleShadow!: Sprite;
-    private handleShadowOffset = { x: 20, y: 35 };
+    private handleShadowOffset = { x: 5, y: 12 };
 
     constructor() {
         super();
