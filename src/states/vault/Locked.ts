@@ -1,18 +1,20 @@
-import { Assets, Container, DisplayObject } from "pixi.js";
-import gsap from "gsap";
+import { Assets, Container, DisplayObject } from 'pixi.js';
+import gsap from 'gsap';
 
-import State, { IStateUtils } from "../../core/State";
+import { Debug } from '../../utils/debug';
 
-import Door from "../../prefabs/DoorClosed";
-import Handle from "../../prefabs/DoorHandle";
-import Button from "../../prefabs/Button";
+import State, { IStateUtils } from '../../core/State';
 
-import VaultLock from "../../prefabs/VaultLock";
-import Timer from "../../prefabs/Timer";
+import Door from '../../prefabs/DoorClosed';
+import Handle from '../../prefabs/DoorHandle';
+import Button from '../../prefabs/Button';
+
+import VaultLock from '../../prefabs/VaultLock';
+import Timer from '../../prefabs/Timer';
 
 // const R2D = 180 / Math.PI;
-const D2R = Math.PI / 180;
-const ROTATION_STEP = 60 * D2R;
+// const D2R = Math.PI / 180;
+const ROTATION_STEP = 60;
 
 export class Locked extends State {
     private door!: Door;
@@ -27,57 +29,54 @@ export class Locked extends State {
 
         this.timer = Timer.getInstance();
 
-        this.door = new Door(Assets.get("door"));
+        this.door = new Door(Assets.get('door'));
         this.door.anchor.set(0.5);
         this.door.position.set(55, -35);
-
         this.handle = new Handle();
         this.handle.position.set(-92, -5);
-
         this.door.addChild(this.handle as unknown as DisplayObject);
 
-        this.rotateHandleBtns = new Container();
-        let rotateHandleToLeftBtn = new Button("counterclockwise", 0, 0, 75);
-        rotateHandleToLeftBtn.on(
-            "pointertap",
-            this.rotateHandleCounterClockwise,
-            this
-        );
+        const rotateHandleToLeftBtn = new Button('counterclockwise', 0, 0, 75);
+        rotateHandleToLeftBtn.on('pointertap', this.rotateHandleCounterClockwise, this);
         rotateHandleToLeftBtn.x -= 350;
-        const rotateHandleToRightBtn = new Button("clockwise", 0, 0, 75);
-        rotateHandleToRightBtn.on("pointertap", this.rotateHandleClockwise, this);
+
+        const rotateHandleToRightBtn = new Button('clockwise', 0, 0, 75);
+        rotateHandleToRightBtn.on('pointertap', this.rotateHandleClockwise, this);
         rotateHandleToRightBtn.x += 290;
+
+        this.rotateHandleBtns = new Container();
         this.rotateHandleBtns.addChild(
-      rotateHandleToLeftBtn as unknown as DisplayObject,
-      rotateHandleToRightBtn as unknown as DisplayObject
+            rotateHandleToLeftBtn as unknown as DisplayObject,
+            rotateHandleToRightBtn as unknown as DisplayObject
         );
 
         this.vaultLock = new VaultLock({
             onInit: async () => {
-                console.log("VAULT_LOCK_INIT");
-                this.handle.rotation = 0;
+                Debug.log('VAULT_LOCK_INIT');
+                this.handle.angle = 0;
             },
             onReset: async () => {
-                console.log("VAULT_LOCK_RESET");
+                Debug.log('VAULT_LOCK_RESET');
                 this.handle.interactive = false;
-                this.handle.eventMode = "none";
-                await this.rotateHandleFast(6, 1);
+                this.handle.eventMode = 'none';
+                const resetRotationDir = (this.vaultLock.lastDirection * -1) as -1 | 0 | 1;
+                await this.rotateHandleFast(6, 1, resetRotationDir);
                 gsap.killTweensOf(this.handle);
                 this.handle.interactive = true;
-                this.handle.eventMode = "static";
+                this.handle.eventMode = 'static';
                 this.timer.reset();
                 this.timer.start();
             },
             onUnlock: async () => {
-                console.log("VAULT_LOCK_UNLOCKED");
+                Debug.log('VAULT_LOCK_UNLOCKED');
                 this.timer.stop();
-                this.utils.requestStateChange("Unlocked");
+                this.utils.requestStateChange('Unlocked');
             },
         });
 
         this.addChild(
-      this.door as unknown as DisplayObject,
-      this.rotateHandleBtns as unknown as DisplayObject
+            this.door as unknown as DisplayObject,
+            this.rotateHandleBtns as unknown as DisplayObject
         );
     }
 
@@ -93,39 +92,51 @@ export class Locked extends State {
 
     private async rotateHandleCounterClockwise() {
         await this.rotateHandle(-ROTATION_STEP);
-        await this.vaultLock.tryToUnlock(1, "counterclockwise");
+        await this.vaultLock.tryToUnlock(1, 'counterclockwise');
     }
 
     private async rotateHandleClockwise() {
         await this.rotateHandle(ROTATION_STEP);
-        await this.vaultLock.tryToUnlock(1, "clockwise");
+        await this.vaultLock.tryToUnlock(1, 'clockwise');
     }
 
     private async rotateHandle(step: number) {
-        const currentRotation = this.handle.rotation;
-        const targetRotation =
-      Math.round((currentRotation + step) / ROTATION_STEP) * ROTATION_STEP;
         return gsap.to(this.handle, {
-            rotation: targetRotation,
+            angle: `+=${step}`,
             duration: 0.3,
-            ease: "power2.out",
-            onUpdate: this.handle.onRotate.bind(this.handle),
-            onUpdateParams: [this.handle.rotation],
+            ease: 'power2.out',
+            onUpdate: () => {
+                this.handle.onRotate();
+            },
+            onComplete: () => {
+                this.handle.onRotateComplete();
+            }
         });
     }
 
-    private async rotateHandleFast(rounds: number, duration: number) {
-        const currentRotation = this.handle.rotation;
-        const fullRotation = Math.PI * 2;
-        const normalizedRotation = currentRotation % fullRotation;
-        const targetRotation =
-      currentRotation + fullRotation * rounds - normalizedRotation;
+    private async rotateHandleFast(
+        rounds: number,
+        duration: number,
+        direction: -1 | 0 | 1
+    ) {
+        // remove current rotation angle
+        // and multiply by direction factor
+        let rotation = (
+            direction < 0 
+                ? 360 * rounds + this.handle.angle
+                : 360 * rounds - this.handle.angle
+        ) * direction;
+
         return gsap.to(this.handle, {
-            rotation: targetRotation,
+            angle: `+=${rotation}`,
             duration: duration,
-            ease: "power2.out",
-            onUpdate: this.handle.onRotate.bind(this.handle),
-            onUpdateParams: [this.handle.rotation],
+            ease: 'power2.out',
+            onUpdate: () => {
+                this.handle.onRotate();
+            },
+            onComplete: () => {
+                this.handle.onRotateComplete();
+            },
         });
     }
 }
