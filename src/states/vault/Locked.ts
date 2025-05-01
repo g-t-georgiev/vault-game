@@ -31,18 +31,18 @@ export class Locked extends State {
 
         this.door = new Door(Assets.get('door'));
         this.door.anchor.set(0.5);
-        this.door.position.set(55, -35);
+        this.door.position.set(20, -15);
         this.handle = new Handle();
-        this.handle.position.set(-92, -5);
+        this.handle.position.set(-31, -2);
         this.door.addChild(this.handle as unknown as DisplayObject);
 
-        const rotateHandleToLeftBtn = new Button('counterclockwise', 0, 0, 75);
+        const rotateHandleToLeftBtn = new Button('counterclockwise', 0, 0, 30);
         rotateHandleToLeftBtn.on('pointertap', this.rotateHandleCounterClockwise, this);
-        rotateHandleToLeftBtn.x -= 350;
+        rotateHandleToLeftBtn.x -= 122;
 
-        const rotateHandleToRightBtn = new Button('clockwise', 0, 0, 75);
+        const rotateHandleToRightBtn = new Button('clockwise', 0, 0, 30);
         rotateHandleToRightBtn.on('pointertap', this.rotateHandleClockwise, this);
-        rotateHandleToRightBtn.x += 290;
+        rotateHandleToRightBtn.x += 100;
 
         this.rotateHandleBtns = new Container();
         this.rotateHandleBtns.addChild(

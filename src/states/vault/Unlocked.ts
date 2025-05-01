@@ -15,16 +15,16 @@ export class Unlocked extends State {
         super(utils);
 
         this.door = new Door();
-        this.door.position.set(1460, -15);
+        this.door.position.set(498, -12);
 
         this.particles = Array.from({ length: 3 }, (_, i) => {
             const glitter = new Glitter(Assets.get('blink'));
             if (i == 0) {
-                glitter.position.set(-75, -15);
+                glitter.position.set(-25, -5);
             } else if (i == 1) {
-                glitter.position.set(-500, -15);
+                glitter.position.set(-170, -5);
             } else {
-                glitter.position.set(170, 330);
+                glitter.position.set(58, 112);
             }
             return glitter;
         });
