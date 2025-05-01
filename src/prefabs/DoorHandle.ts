@@ -1,34 +1,31 @@
-import { Assets, Sprite, Container, DisplayObject } from "pixi.js";
+import { Assets, Sprite, Container, DisplayObject } from 'pixi.js';
 
 export default class DoorHandle extends Container {
     private handle!: Sprite;
     private handleShadow!: Sprite;
     private handleShadowOffset = { x: 20, y: 35 };
-    private handleShadowRotationEffect = 10;
 
     constructor() {
         super();
-        this.handle = new Sprite(Assets.get("handle"));
+        this.handle = new Sprite(Assets.get('handle'));
         this.handle.anchor.set(0.5);
-        this.handleShadow = new Sprite(Assets.get("handleShadow"));
+        this.handleShadow = new Sprite(Assets.get('handleShadow'));
         this.handleShadow.anchor.set(0.5);
         this.handleShadow.position.set(
             this.handleShadowOffset.x,
             this.handleShadowOffset.y
         );
         this.addChild(
-      this.handleShadow as unknown as DisplayObject,
-      this.handle as unknown as DisplayObject
+            this.handleShadow as unknown as DisplayObject,
+            this.handle as unknown as DisplayObject
         );
     }
 
     onRotate() {
-    // TODO: Modify shadow offset to be more realistic during rotation
-        this.handleShadow.position.set(
-            this.handleShadowOffset.x +
-        Math.sin(this.rotation) * this.handleShadowRotationEffect,
-            this.handleShadowOffset.y +
-        Math.cos(this.rotation) * this.handleShadowRotationEffect
-        );
+        // TODO: Modify shadow offset to be more realistic during rotation
+    }
+
+    onRotateComplete() {
+        this.angle = this.angle % 360;
     }
 }
