@@ -25,7 +25,7 @@ export default class Timer extends Container {
         this.timerText = new Text(this.formatTime(this.time), {
             fontFamily: 'Share Tech Mono',
             fontWeight: '600',
-            fontSize: 55,
+            fontSize: 22,
             lineHeight: 1,
             fill: 0xff0000,
         });
