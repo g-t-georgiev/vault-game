@@ -54,7 +54,7 @@ export default class Game extends Scene {
 
         if (!this.timer) {
             this.timer = Timer.getInstance();
-            this.timer.position.set(-1300, -170);
+            this.timer.position.set(-450, -60);
             this.mainContainer.addChild(this.timer as unknown as DisplayObject);
         } else {
             this.timer.reset();
@@ -75,7 +75,7 @@ export default class Game extends Scene {
 
     onResize(width: number, height: number): void {
         if (!this.mainContainer) return;
-        this.mainContainer.resize(width, height);
+        this.mainContainer?.resize?.(width, height);
     }
 
     private switchState(state: string) {
