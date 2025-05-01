@@ -1,13 +1,13 @@
-import { Container } from "pixi.js";
+import { Container } from 'pixi.js';
 
 export interface IState {
-  load(): Promise<void> | void;
-  unload(): Promise<void> | void;
-  update(elapsedMS: number): void;
+    load(): Promise<void> | void;
+    unload(): Promise<void> | void;
+    update(elapsedMS: number): void;
 }
 
 export interface IStateUtils {
-  requestStateChange: (state: string) => void;
+    requestStateChange: (state: string) => void;
 }
 
 export type BaseState = Container & Partial<IState>;

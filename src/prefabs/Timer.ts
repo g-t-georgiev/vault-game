@@ -1,4 +1,4 @@
-import { Container, DisplayObject, Graphics, Text } from "pixi.js";
+import { Container, DisplayObject, Graphics, Text } from 'pixi.js';
 
 export default class Timer extends Container {
     private static instance: Timer | null = null;
@@ -23,8 +23,8 @@ export default class Timer extends Container {
         super();
 
         this.timerText = new Text(this.formatTime(this.time), {
-            fontFamily: "Share Tech Mono",
-            fontWeight: "600",
+            fontFamily: 'Share Tech Mono',
+            fontWeight: '600',
             fontSize: 55,
             lineHeight: 1,
             fill: 0xff0000,
@@ -44,8 +44,8 @@ export default class Timer extends Container {
         this.timerPad.endFill();
 
         this.addChild(
-      this.timerPad as unknown as DisplayObject,
-      this.timerText as unknown as DisplayObject
+            this.timerPad as unknown as DisplayObject,
+            this.timerText as unknown as DisplayObject
         );
     }
 
@@ -75,9 +75,9 @@ export default class Timer extends Container {
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
 
-        const paddedHours = String(hours).padStart(2, "0");
-        const paddedMinutes = String(minutes).padStart(2, "0");
-        const paddedSeconds = String(seconds).padStart(2, "0");
+        const paddedHours = String(hours).padStart(2, '0');
+        const paddedMinutes = String(minutes).padStart(2, '0');
+        const paddedSeconds = String(seconds).padStart(2, '0');
 
         return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
     }

@@ -1,5 +1,5 @@
-import { DisplayObject, Sprite, Texture } from "pixi.js";
-import { centerObjects } from "../utils/misc";
+import { DisplayObject, Sprite, Texture } from 'pixi.js';
+import { centerObjects } from '../utils/misc';
 
 export default class Background extends Sprite {
     constructor(texture: Texture) {

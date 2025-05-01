@@ -1,5 +1,5 @@
-import { Sprite, Texture, BLEND_MODES } from "pixi.js";
-import gsap from "gsap";
+import { Sprite, Texture, BLEND_MODES } from 'pixi.js';
+import gsap from 'gsap';
 
 export default class Glitter extends Sprite {
     private animationTl!: GSAPTimeline | null;
@@ -22,7 +22,7 @@ export default class Glitter extends Sprite {
             paused: true,
             repeat: -1,
             repeatDelay: 1 + Math.random(),
-            defaults: { ease: "sine.inOut" },
+            defaults: { ease: 'sine.inOut' },
         });
 
         tl.to(this, {
@@ -35,7 +35,7 @@ export default class Glitter extends Sprite {
                     rotation: `+=${0.3 + Math.random() * 0.3}`,
                     duration: 0.5,
                 },
-                "<"
+                '<'
             )
             .to(
                 this.scale,
@@ -44,7 +44,7 @@ export default class Glitter extends Sprite {
                     y: initialScale + 0.2,
                     duration: 0.5,
                 },
-                "<"
+                '<'
             )
             .to(
                 this,
@@ -54,7 +54,7 @@ export default class Glitter extends Sprite {
                     yoyo: true,
                     repeat: 1,
                 },
-                "<+0.3"
+                '<+0.3'
             )
             .to(
                 this,
@@ -62,7 +62,7 @@ export default class Glitter extends Sprite {
                     alpha: 0,
                     duration: 1,
                 },
-                ">0.1"
+                '>0.1'
             );
 
         const initialDelay = Math.random() * 1;

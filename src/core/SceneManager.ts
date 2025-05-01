@@ -1,10 +1,10 @@
-import { Application, DisplayObject } from "pixi.js";
-import Scene from "./Scene";
-import AssetLoader from "./AssetLoader";
+import { Application, DisplayObject } from 'pixi.js';
+import Scene from './Scene';
+import AssetLoader from './AssetLoader';
 // import { Debug } from '../utils/debug';
 
 export interface SceneUtils {
-  assetLoader: AssetLoader;
+    assetLoader: AssetLoader;
 }
 
 export default class SceneManager {
@@ -16,18 +16,21 @@ export default class SceneManager {
 
     constructor() {
         this.app = new Application({
-            view: document.querySelector("#app") as HTMLCanvasElement,
+            view: document.querySelector('#app') as HTMLCanvasElement,
             autoDensity: true,
             resizeTo: window,
-            powerPreference: "high-performance",
+            powerPreference: 'high-performance',
             backgroundColor: 0x23272a,
         });
 
         // @ts-expect-error Set PIXI app to global window object for the PIXI Inspector
         window.__PIXI_APP__ = this.app;
-        window.addEventListener("resize", (ev: UIEvent) => {
+        window.addEventListener('resize', (ev: UIEvent) => {
             const target = ev.target as Window;
-            this.currentScene?.onResize?.(target.innerWidth, target.innerHeight);
+            this.currentScene?.onResize?.(
+                target.innerWidth,
+                target.innerHeight
+            );
         });
         this.app.ticker.add(() => {
             this.currentScene?.update?.(this.app.ticker.elapsedMS);
@@ -35,22 +38,26 @@ export default class SceneManager {
     }
 
     importScenes() {
-        const sceneModules = import.meta.glob("/src/scenes/*.ts", {
+        const sceneModules = import.meta.glob('/src/scenes/*.ts', {
             eager: true,
         }) as Record<string, { default: ConstructorType<typeof Scene> }>;
 
         return Object.entries(sceneModules).reduce((acc, [path, module]) => {
-      const fileName = path.split("/").pop()?.split(".")[0];
-      if (!fileName) throw new Error("Error while parsing filename");
+            const fileName = path.split('/').pop()?.split('.')[0];
+            if (!fileName) throw new Error('Error while parsing filename');
             acc[fileName] = module.default;
             return acc;
         }, {} as Record<string, ConstructorType<typeof Scene>>);
     }
 
-    async switchScene(sceneName: string, deletePrevious = true): Promise<Scene> {
+    async switchScene(
+        sceneName: string,
+        deletePrevious = true
+    ): Promise<Scene> {
         await this.removeScene(deletePrevious);
         this.currentScene = this.sceneInstances.get(sceneName);
-        if (!this.currentScene) this.currentScene = await this.initScene(sceneName);
+        if (!this.currentScene)
+            this.currentScene = await this.initScene(sceneName);
         if (!this.currentScene)
             throw new Error(`Failed to initialize scene: ${sceneName}`);
         this.app.stage.addChild(this.currentScene as unknown as DisplayObject);
@@ -64,7 +71,9 @@ export default class SceneManager {
             this.sceneInstances.delete(this.currentScene.name);
             this.currentScene.destroy({ children: true });
         } else {
-            this.app.stage.removeChild(this.currentScene as unknown as DisplayObject);
+            this.app.stage.removeChild(
+                this.currentScene as unknown as DisplayObject
+            );
         }
 
         if (this.currentScene.unload) await this.currentScene.unload();

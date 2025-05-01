@@ -1,26 +1,26 @@
-import { Assets, DisplayObject } from "pixi.js";
+import { Assets, DisplayObject } from 'pixi.js';
 
-import { SceneUtils } from "../core/SceneManager";
-import Scene from "../core/Scene";
+import { SceneUtils } from '../core/SceneManager';
+import Scene from '../core/Scene';
 
-import { BaseState } from "../core/State";
-import { Locked, Unlocked } from "../states/vault/index";
+import { BaseState } from '../core/State';
+import { Locked, Unlocked } from '../states/vault/index';
 
-import Background from "../prefabs/Background";
-import Timer from "../prefabs/Timer";
+import Background from '../prefabs/Background';
+import Timer from '../prefabs/Timer';
 
 enum VaultState {
-  Locked = "Locked",
-  Unlocked = "Unlocked",
+    Locked = 'Locked',
+    Unlocked = 'Unlocked',
 }
 
 type VaultStates = {
-  [VaultState.Locked]: Locked;
-  [VaultState.Unlocked]: Unlocked;
+    [VaultState.Locked]: Locked;
+    [VaultState.Unlocked]: Unlocked;
 };
 
 export default class Game extends Scene {
-    name = "Game";
+    name = 'Game';
 
     private timer!: Timer;
 
@@ -34,15 +34,17 @@ export default class Game extends Scene {
     }
 
     async load() {
-        await this.utils.assetLoader.loadAssetsGroup("Game");
+        await this.utils.assetLoader.loadAssetsGroup('Game');
         if (!this.mainContainer) {
-            this.mainContainer = new Background(Assets.get("bg"));
+            this.mainContainer = new Background(Assets.get('bg'));
             this.mainContainer.resize(window.innerWidth, window.innerHeight);
             this.addChild(this.mainContainer as unknown as DisplayObject);
         }
         if (!this.states) {
             this.states = {
-                Locked: new Locked({ requestStateChange: this.switchState.bind(this) }),
+                Locked: new Locked({
+                    requestStateChange: this.switchState.bind(this),
+                }),
                 Unlocked: new Unlocked({
                     requestStateChange: this.switchState.bind(this),
                 }),
@@ -67,7 +69,7 @@ export default class Game extends Scene {
     update(elapsedMS: number) {
         this.timer.update(elapsedMS);
 
-        if (typeof this.currentState?.update == "function")
+        if (typeof this.currentState?.update == 'function')
             this.currentState.update(elapsedMS);
     }
 
@@ -78,22 +80,22 @@ export default class Game extends Scene {
 
     private switchState(state: string) {
         if (this.currentState) {
-            if (typeof this.currentState?.unload == "function")
+            if (typeof this.currentState?.unload == 'function')
                 this.currentState.unload();
             this.mainContainer.removeChild(
-        this.currentState as unknown as DisplayObject
+                this.currentState as unknown as DisplayObject
             );
         }
 
         const nextState = Object.entries(this.states).find(
-      ([s]) => s === state
-    )?.[1];
+            ([s]) => s === state
+        )?.[1];
         if (nextState) {
             this.currentState = nextState;
-            if (typeof this.currentState?.load == "function") {
+            if (typeof this.currentState?.load == 'function') {
                 this.currentState.load();
                 this.mainContainer.addChild(
-          this.currentState as unknown as DisplayObject
+                    this.currentState as unknown as DisplayObject
                 );
             }
         }

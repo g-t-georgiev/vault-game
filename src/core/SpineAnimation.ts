@@ -1,11 +1,11 @@
-import { Assets } from "pixi.js";
+import { Assets } from 'pixi.js';
 import {
     type AnimationStateListener,
     type TrackEntry,
     Spine,
-} from "@pixi-spine/runtime-4.1";
+} from '@pixi-spine/runtime-4.1';
 
-import Deferred from "../utils/Deferred";
+import Deferred from '../utils/Deferred';
 
 export default class SpineAnimation extends Spine {
     playingLabel: string | null = null;

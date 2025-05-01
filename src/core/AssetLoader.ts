@@ -1,17 +1,16 @@
-import { Assets } from "pixi.js";
-import { Debug } from "../utils/debug";
-import "pixi-spine";
+import { Assets } from 'pixi.js';
+import { Debug } from '../utils/debug';
+import 'pixi-spine';
 
 type Asset = {
-  name: string;
-  url: string;
-  ext: string;
-  category: string;
-  group: string;
+    name: string;
+    url: string;
+    ext: string;
+    category: string;
+    group: string;
 };
 
 export default class AssetLoader {
-
     private assetFileUrls = this.importAssetFiles();
     private baseUrl = import.meta.env.VITE_BASE_URL || '/';
 
@@ -22,21 +21,25 @@ export default class AssetLoader {
     }
 
     importAssetFiles() {
-        const assetFiles = import.meta.glob("/public/**/*.*");
+        const assetFiles = import.meta.glob('/public/**/*.*');
 
         return Object.keys(assetFiles);
     }
 
     async loadAssetsGroup(group: string) {
-        const sceneAssets = this.manifest.filter((asset) => asset.group === group);
+        const sceneAssets = this.manifest.filter(
+            (asset) => asset.group === group
+        );
 
         for (const asset of sceneAssets) {
             Assets.add(asset.name, asset.url);
         }
 
-        const resources = await Assets.load(sceneAssets.map((asset) => asset.name));
+        const resources = await Assets.load(
+            sceneAssets.map((asset) => asset.name)
+        );
 
-        Debug.log("✅ Loaded assets group", group, resources);
+        Debug.log('✅ Loaded assets group', group, resources);
 
         return resources;
     }
@@ -44,7 +47,7 @@ export default class AssetLoader {
     generateManifest() {
         const assetsManifest: Asset[] = [];
         const assetPathRegexp =
-      /public\/(?<group>[\w.-]+)\/(?<category>[\w.-]+)\/(?<name>[\w.-]+)\.(?<ext>\w+)$/;
+            /public\/(?<group>[\w.-]+)\/(?<category>[\w.-]+)\/(?<name>[\w.-]+)\.(?<ext>\w+)$/;
 
         this.assetFileUrls.forEach((assetPath) => {
             const match = assetPathRegexp.exec(assetPath);
@@ -58,11 +61,11 @@ export default class AssetLoader {
             const { group, category, name, ext } = match.groups;
 
             // Skip image files in the spine or spritesheets category
-            if (category === "spritesheets" && ext !== "json") {
+            if (category === 'spritesheets' && ext !== 'json') {
                 return;
             }
 
-            if (category === "spine" && ext !== "json" && ext !== "skel") {
+            if (category === 'spine' && ext !== 'json' && ext !== 'skel') {
                 return;
             }
 
@@ -71,7 +74,7 @@ export default class AssetLoader {
                 category,
                 name,
                 ext,
-                url: `${this.baseUrl}${assetPath.replace(/.*public\//, "")}`,
+                url: `${this.baseUrl}${assetPath.replace(/.*public\//, '')}`,
             });
         });
 

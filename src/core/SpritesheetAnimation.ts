@@ -1,8 +1,8 @@
-import { sound } from "@pixi/sound";
-import { AnimatedSprite, Assets, Container, DisplayObject } from "pixi.js";
+import { sound } from '@pixi/sound';
+import { AnimatedSprite, Assets, Container, DisplayObject } from 'pixi.js';
 
 export default class SpritesheetAnimation extends Container {
-    animationTextures: Record<string, AnimatedSprite["textures"]>;
+    animationTextures: Record<string, AnimatedSprite['textures']>;
     sprite?: AnimatedSprite;
     speed = 1;
 
@@ -42,11 +42,11 @@ export default class SpritesheetAnimation extends Container {
         loop = false,
         speed = this.speed,
     }: {
-    anim: string;
-    soundName?: string;
-    loop?: boolean;
-    speed?: number;
-  }) {
+        anim: string;
+        soundName?: string;
+        loop?: boolean;
+        speed?: number;
+    }) {
         if (this.sprite) {
             this.sprite.stop();
 
