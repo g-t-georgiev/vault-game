@@ -11,73 +11,57 @@ type Asset = {
 };
 
 export default class AssetLoader {
-    private assetFileUrls = this.importAssetFiles();
-    private baseUrl = import.meta.env.VITE_BASE_URL || '/';
-
-    manifest: Asset[];
+    private manifest: Asset[];
 
     constructor() {
         this.manifest = this.generateManifest();
     }
 
-    importAssetFiles() {
-        const assetFiles = import.meta.glob('/public/**/*.*');
+    private generateManifest(): Asset[] {
+        const assetFiles = import.meta.glob('/src/assets/**/*.*', {
+            eager: true,
+            import: 'default',
+        });
 
-        return Object.keys(assetFiles);
+        const assetPathRegexp =
+            /src\/assets\/(?<group>[\w.-]+)\/(?<category>[\w.-]+)\/(?<name>[\w.-]+)\.(?<ext>\w+)$/;
+
+        const manifest: Asset[] = [];
+
+        for (const [path, url] of Object.entries(assetFiles)) {
+            const match = assetPathRegexp.exec(path);
+            if (!match?.groups) {
+                console.error(`❌ Invalid asset path: ${path}`);
+                continue;
+            }
+
+            const { group, category, name, ext } = match.groups;
+
+            // Skip unnecessary files
+            if (category === 'spritesheets' && ext !== 'json') continue;
+            if (category === 'spine' && !['json', 'skel'].includes(ext)) continue;
+
+            manifest.push({
+                group,
+                category,
+                name,
+                ext,
+                url: url as string,
+            });
+        }
+
+        return manifest;
     }
 
     async loadAssetsGroup(group: string) {
-        const sceneAssets = this.manifest.filter(
-            (asset) => asset.group === group
-        );
+        const sceneAssets = this.manifest.filter(asset => asset.group === group);
 
         for (const asset of sceneAssets) {
             Assets.add(asset.name, asset.url);
         }
 
-        const resources = await Assets.load(
-            sceneAssets.map((asset) => asset.name)
-        );
-
-        Debug.log('✅ Loaded assets group', group, resources);
-
+        const resources = await Assets.load(sceneAssets.map(a => a.name));
+        Debug.log('✅ Loaded assets group:', group, resources);
         return resources;
-    }
-
-    generateManifest() {
-        const assetsManifest: Asset[] = [];
-        const assetPathRegexp =
-            /public\/(?<group>[\w.-]+)\/(?<category>[\w.-]+)\/(?<name>[\w.-]+)\.(?<ext>\w+)$/;
-
-        this.assetFileUrls.forEach((assetPath) => {
-            const match = assetPathRegexp.exec(assetPath);
-
-            if (!match || !match.groups) {
-                return console.error(
-                    `Invalid asset path: ${assetPath}, should match ${assetPathRegexp}`
-                );
-            }
-
-            const { group, category, name, ext } = match.groups;
-
-            // Skip image files in the spine or spritesheets category
-            if (category === 'spritesheets' && ext !== 'json') {
-                return;
-            }
-
-            if (category === 'spine' && ext !== 'json' && ext !== 'skel') {
-                return;
-            }
-
-            assetsManifest.push({
-                group,
-                category,
-                name,
-                ext,
-                url: `${this.baseUrl}${assetPath.replace(/.*public\//, '')}`,
-            });
-        });
-
-        return assetsManifest;
     }
 }
