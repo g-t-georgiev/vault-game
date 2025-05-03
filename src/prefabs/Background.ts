@@ -9,8 +9,8 @@ export default class Background extends Sprite {
     }
 
     resize(params: ISceneResizeParams) {
-        const scaleByWidth = params.screenWidth / this.texture.width;
-        const scaleByHeight = params.screenHeight / this.texture.height;
+        const scaleByWidth = Math.min(params.deviceWidth, params.screenWidth) / this.texture.width;
+        const scaleByHeight = Math.min(params.deviceHeight, params.screenHeight) / this.texture.height;
         const scaleFactor = Math.min(scaleByWidth, scaleByHeight);
         this.width = this.texture.width * scaleFactor;
         this.height = this.texture.width * scaleFactor;
