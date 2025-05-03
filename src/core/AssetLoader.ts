@@ -11,57 +11,76 @@ type Asset = {
 };
 
 export default class AssetLoader {
-    private manifest: Asset[];
+    manifest: Asset[] = [];
 
     constructor() {
-        this.manifest = this.generateManifest();
+        this.generateManifest();
     }
 
-    private generateManifest(): Asset[] {
-        const assetFiles = import.meta.glob('/src/assets/**/*.*', {
+    private generateManifest() {
+        const assetFiles = import.meta.glob('../../assets/**/*.*', {
             eager: true,
-            import: 'default',
-        });
+            query: '?url',
+            import: 'default'
+        }) as Record<string, string>;
+
+        Debug.log('Assets found:', assetFiles); // Debugging assets
 
         const assetPathRegexp =
-            /src\/assets\/(?<group>[\w.-]+)\/(?<category>[\w.-]+)\/(?<name>[\w.-]+)\.(?<ext>\w+)$/;
+            /assets\/(?<group>[\w.-]+)\/(?<category>[\w.-]+)\/(?<name>[\w.-]+)\.(?<ext>\w+)$/;
 
-        const manifest: Asset[] = [];
+        this.manifest = [];
 
-        for (const [path, url] of Object.entries(assetFiles)) {
+        for (const path in assetFiles) {
             const match = assetPathRegexp.exec(path);
             if (!match?.groups) {
-                console.error(`❌ Invalid asset path: ${path}`);
+                Debug.warn(`Skipped invalid asset path: ${path}`);
                 continue;
             }
 
             const { group, category, name, ext } = match.groups;
 
-            // Skip unnecessary files
+            // Optional filtering
             if (category === 'spritesheets' && ext !== 'json') continue;
-            if (category === 'spine' && !['json', 'skel'].includes(ext)) continue;
+            if (category === 'spine' && ext !== 'json' && ext !== 'skel') continue;
 
-            manifest.push({
+            // Debug.log(`Asset URL for ${name}:`, assetFiles[path]);
+
+            this.manifest.push({
                 group,
                 category,
                 name,
                 ext,
-                url: url as string,
+                url: assetFiles[path]
             });
         }
 
-        return manifest;
+        Debug.log('📦 Generated manifest:', this.manifest);
     }
 
     async loadAssetsGroup(group: string) {
-        const sceneAssets = this.manifest.filter(asset => asset.group === group);
 
-        for (const asset of sceneAssets) {
-            Assets.add(asset.name, asset.url);
+        const sceneAssets = this.manifest.filter(a => a.group === group);
+
+        if (sceneAssets.length === 0) {
+            Debug.warn(`⚠️ No assets found for group: ${group}`);
+            return;
         }
 
+        sceneAssets.forEach(asset => {
+            if (!asset.url) {
+                Debug.warn(`⚠️ Skipping asset "${asset.name}" with missing URL`, asset);
+            }
+        });
+
+        sceneAssets.forEach(asset => {
+            Assets.add({ alias: asset.name, src: asset.url });
+        });
+
+        // Loading the assets
         const resources = await Assets.load(sceneAssets.map(a => a.name));
         Debug.log('✅ Loaded assets group:', group, resources);
+
         return resources;
     }
 }
