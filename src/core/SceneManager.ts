@@ -1,5 +1,5 @@
 import { Application, DisplayObject } from 'pixi.js';
-import Scene from './Scene';
+import Scene, { ISceneResizeParams } from './Scene';
 import AssetLoader from './AssetLoader';
 // import { Debug } from '../utils/debug';
 
@@ -26,12 +26,19 @@ export default class SceneManager {
         // @ts-expect-error Set PIXI app to global window object for the PIXI Inspector
         window.__PIXI_APP__ = this.app;
         window.addEventListener('resize', (ev: UIEvent) => {
-            const target = ev.target as Window;
-            this.currentScene?.onResize?.(
-                target.innerWidth,
-                target.innerHeight
-            );
+            // const target = ev.target as Window;
+            requestAnimationFrame(() => {
+                this.currentScene?.onResize?.({
+                    screenWidth: this.app.screen.width,
+                    screenHeight: this.app.screen.height,
+                    resolution: this.app.renderer.resolution,
+                    deviceWidth: window.innerWidth,
+                    deviceHeight: window.innerHeight,
+                    deviceOrientation: window.screen.orientation
+                } as ISceneResizeParams);
+            });
         });
+
         this.app.ticker.add(() => {
             this.currentScene?.update?.(this.app.ticker.elapsedMS);
         });
