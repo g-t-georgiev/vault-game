@@ -1,4 +1,4 @@
-import { Application, Assets, DisplayObject } from 'pixi.js';
+import { Assets, DisplayObject } from 'pixi.js';
 
 import { SceneUtils } from '../core/SceneManager';
 import Scene, { ISceneResizeParams } from '../core/Scene';
