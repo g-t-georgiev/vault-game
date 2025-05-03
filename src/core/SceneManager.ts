@@ -17,17 +17,19 @@ export default class SceneManager {
     constructor() {
         this.app = new Application({
             view: document.querySelector('#app') as HTMLCanvasElement,
-            // autoDensity: true,
+            autoDensity: true,
             resizeTo: window,
-            // resolution: 1,
+            resolution: window.devicePixelRatio,
             powerPreference: 'high-performance',
             backgroundColor: 0x23272a,
         });
 
         // @ts-expect-error Set PIXI app to global window object for the PIXI Inspector
         window.__PIXI_APP__ = this.app;
+        this.app.renderer.resize(this.app.screen.width, this.app.screen.height);
         window.addEventListener('resize', () => {
             requestAnimationFrame(() => {
+                this.app.renderer.resize(this.app.screen.width, this.app.screen.height);
                 this.currentScene?.onResize?.({
                     screenWidth: this.app.screen.width,
                     screenHeight: this.app.screen.height,
