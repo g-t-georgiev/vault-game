@@ -17,9 +17,9 @@ export default class SceneManager {
     constructor() {
         this.app = new Application({
             view: document.querySelector('#app') as HTMLCanvasElement,
-            autoDensity: true,
+            // autoDensity: true,
             resizeTo: window,
-            resolution: 1,
+            // resolution: 1,
             powerPreference: 'high-performance',
             backgroundColor: 0x23272a,
         });
