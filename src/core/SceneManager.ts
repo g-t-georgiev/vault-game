@@ -19,6 +19,7 @@ export default class SceneManager {
             view: document.querySelector('#app') as HTMLCanvasElement,
             autoDensity: true,
             resizeTo: window,
+            resolution: window.devicePixelRatio,
             powerPreference: 'high-performance',
             backgroundColor: 0x23272a,
         });
