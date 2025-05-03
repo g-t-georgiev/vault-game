@@ -37,14 +37,16 @@ export default class Game extends Scene {
         await this.utils.assetLoader.loadAssetsGroup('Game');
         if (!this.mainContainer) {
             this.mainContainer = new Background(Assets.get('bg'));
-            this.mainContainer.resize({
+            let resizeParams = {
                 screenWidth: window.screen.availWidth,
                 screenHeight: window.screen.availHeight,
                 resolution: window.devicePixelRatio,
                 deviceWidth: window.innerWidth,
                 deviceHeight: window.innerHeight,
                 deviceOrientation: window.screen.orientation
-            });
+            } as ISceneResizeParams;
+            console.log('resize params', resizeParams);
+            this.mainContainer.resize(resizeParams);
             this.addChild(this.mainContainer as unknown as DisplayObject);
         }
         if (!this.states) {
