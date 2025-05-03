@@ -1,4 +1,4 @@
-import { Application, Assets, DisplayObject } from 'pixi.js';
+import { Assets, DisplayObject } from 'pixi.js';
 
 import { SceneUtils } from '../core/SceneManager';
 import Scene, { ISceneResizeParams } from '../core/Scene';
@@ -36,15 +36,11 @@ export default class Game extends Scene {
     async load() {
         await this.utils.assetLoader.loadAssetsGroup('Game');
         if (!this.mainContainer) {
-            if ('__PIXI_APP__' in window) {
-                let app = window.__PIXI_APP__ as Application;
-                app.renderer.resize(screen.width, screen.height);
-            }
             this.mainContainer = new Background(Assets.get('bg'));
             let resizeParams = {
                 screenWidth: window.screen.availWidth,
                 screenHeight: window.screen.availHeight,
-                resolution: 1 || window.devicePixelRatio,
+                resolution: 1,
                 deviceWidth: window.innerWidth,
                 deviceHeight: window.innerHeight,
                 deviceOrientation: window.screen.orientation
