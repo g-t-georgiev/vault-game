@@ -25,8 +25,7 @@ export default class SceneManager {
 
         // @ts-expect-error Set PIXI app to global window object for the PIXI Inspector
         window.__PIXI_APP__ = this.app;
-        window.addEventListener('resize', (ev: UIEvent) => {
-            // const target = ev.target as Window;
+        window.addEventListener('resize', () => {
             requestAnimationFrame(() => {
                 this.currentScene?.onResize?.({
                     screenWidth: this.app.screen.width,
