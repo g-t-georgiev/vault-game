@@ -1,7 +1,7 @@
 import { Assets, DisplayObject } from 'pixi.js';
 
 import { SceneUtils } from '../core/SceneManager';
-import Scene from '../core/Scene';
+import Scene, { ISceneResizeParams } from '../core/Scene';
 
 import { BaseState } from '../core/State';
 import { Locked, Unlocked } from '../states/vault/index';
@@ -37,7 +37,14 @@ export default class Game extends Scene {
         await this.utils.assetLoader.loadAssetsGroup('Game');
         if (!this.mainContainer) {
             this.mainContainer = new Background(Assets.get('bg'));
-            this.mainContainer.resize(window.innerWidth, window.innerHeight);
+            this.mainContainer.resize({
+                screenWidth: window.screen.availWidth,
+                screenHeight: window.screen.availHeight,
+                resolution: window.devicePixelRatio,
+                deviceWidth: window.innerWidth,
+                deviceHeight: window.innerHeight,
+                deviceOrientation: window.screen.orientation
+            });
             this.addChild(this.mainContainer as unknown as DisplayObject);
         }
         if (!this.states) {
@@ -73,9 +80,9 @@ export default class Game extends Scene {
             this.currentState.update(elapsedMS);
     }
 
-    onResize(width: number, height: number): void {
+    onResize(params: ISceneResizeParams): void {
         if (!this.mainContainer) return;
-        this.mainContainer?.resize?.(width, height);
+        this.mainContainer?.resize?.(params);
     }
 
     private switchState(state: string) {
