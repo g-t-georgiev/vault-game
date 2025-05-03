@@ -86,7 +86,6 @@ export default class Game extends Scene {
     onResize(params: ISceneResizeParams): void {
         if (!this.mainContainer) return;
         this.mainContainer?.resize?.(params);
-        console.log(this.width, this.height);
     }
 
     private switchState(state: string) {
