@@ -1,4 +1,4 @@
-import { Assets, DisplayObject } from 'pixi.js';
+import { Application, Assets, DisplayObject } from 'pixi.js';
 
 import { SceneUtils } from '../core/SceneManager';
 import Scene, { ISceneResizeParams } from '../core/Scene';
@@ -47,8 +47,23 @@ export default class Game extends Scene {
                 deviceOrientation: window.screen.orientation
             } as ISceneResizeParams;
 
-            this.mainContainer.resize(resizeParams);
             this.addChild(this.mainContainer as unknown as DisplayObject);
+            this.mainContainer.resize(resizeParams);
+            requestAnimationFrame(() => {
+                this.mainContainer.resize(resizeParams);
+            });
+
+            let _window = window as unknown as Window & { __PIXI_APP__: Application};
+            let app = _window.__PIXI_APP__ as Application;
+            console.log({
+                windowInner: [window.innerWidth, window.innerHeight],
+                screen: [screen.width, screen.height],
+                canvasCSS: [app?.view?.style?.width, app?.view?.style?.height],
+                canvasAttr: [app.view.width, app.view.height],
+                appScreen: [app.screen.width, app.screen.height],
+                resolution: app.renderer.resolution,
+            });
+
         }
         if (!this.states) {
             this.states = {
