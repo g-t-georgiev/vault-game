@@ -40,7 +40,7 @@ export default class Game extends Scene {
             let resizeParams = {
                 screenWidth: window.screen.availWidth,
                 screenHeight: window.screen.availHeight,
-                resolution: window.devicePixelRatio,
+                resolution: 1 || window.devicePixelRatio,
                 deviceWidth: window.innerWidth,
                 deviceHeight: window.innerHeight,
                 deviceOrientation: window.screen.orientation
