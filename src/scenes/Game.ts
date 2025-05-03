@@ -31,12 +31,11 @@ export default class Game extends Scene {
 
     constructor(utils: SceneUtils) {
         super(utils);
-        console.log(this.width, this.height);
     }
 
     async load() {
         await this.utils.assetLoader.loadAssetsGroup('Game');
-        console.log(this.width, this.height);
+
         if (!this.mainContainer) {
             this.mainContainer = new Background(Assets.get('bg'));
             let resizeParams = {
@@ -47,10 +46,9 @@ export default class Game extends Scene {
                 deviceHeight: window.innerHeight,
                 deviceOrientation: window.screen.orientation
             } as ISceneResizeParams;
-            console.log('resize params', resizeParams);
+
             this.mainContainer.resize(resizeParams);
             this.addChild(this.mainContainer as unknown as DisplayObject);
-            console.log(this.width, this.height);
         }
         if (!this.states) {
             this.states = {
