@@ -1,5 +1,22 @@
 import { DisplayObject, Sprite } from 'pixi.js';
 
+export function getLerpT(value: number, min: number, max: number): number {
+    return Math.min(Math.max((value - min) / (max - min), 0), 1);
+};
+
+export function lerp(a: number, b: number, t: number): number {
+    return a + (b - a) * t;
+};
+
+export function getScale(
+    viewport: { width: number, height: number },
+    target: { width: number, height: number }): { x: number, y: number } {
+    return {
+        x: viewport.width / target.width,
+        y: viewport.height / target.height
+    };
+}
+
 export function centerObjects(...toCenter: DisplayObject[]) {
     const center = (obj: DisplayObject) => {
         obj.x = window.innerWidth / 2;
