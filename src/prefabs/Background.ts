@@ -1,8 +1,10 @@
 import { Sprite, Texture } from 'pixi.js';
-
 import { ISceneResizeParams } from '../core/Scene';
+import { getScale, getLerpT, lerp } from '../utils/misc';
 
-const SAFE_AREA = { x: 493, y: 137, width: 1047, height: 738 };
+const SAFE_AREA = { x: 530, y: 165, width: 973, height: 674 };
+const THRESHOLD_WIDTH = { min: 760, max: 1340 };
+const THRESHOLD_HEIGHT = { min: 380, max: 670 };
 
 export default class Background extends Sprite {
     constructor(texture: Texture) {
@@ -19,13 +21,19 @@ export default class Background extends Sprite {
         const fullfitScale = getScale(viewport, this.texture);
         const safeAreaScale = getScale(viewport, SAFE_AREA);
 
-        let useSafeAreaScale = viewport.width <= 1100 || viewport.height <= 550;
         let safeAreaCenterX = SAFE_AREA.x + SAFE_AREA.width * 0.5;
         let safeAreaCenterY = SAFE_AREA.y + SAFE_AREA.height * 0.5;
 
-        let scaleFactor = useSafeAreaScale 
-            ? Math.min(safeAreaScale.x, safeAreaScale.y) 
-            : Math.min(fullfitScale.x, fullfitScale.y);
+        let tWidth = getLerpT(viewport.width, THRESHOLD_WIDTH.min, THRESHOLD_WIDTH.max);
+        let tHeight = getLerpT(viewport.height, THRESHOLD_HEIGHT.min, THRESHOLD_HEIGHT.max);
+        let t = Math.min(tWidth, tHeight);
+
+        let interpolatedScale = {
+            x: lerp(safeAreaScale.x, fullfitScale.x, t),
+            y: lerp(safeAreaScale.y, fullfitScale.y, t)
+        };
+
+        let scaleFactor = Math.min(interpolatedScale.x, interpolatedScale.y);
 
         this.scale.set(scaleFactor);
         this.anchor.set(0.5);
@@ -36,13 +44,4 @@ export default class Background extends Sprite {
         this.x = viewport.width * 0.5 - offsetX;
         this.y = viewport.height * 0.5 - offsetY;
     }
-}
-
-function getScale(
-    viewport: { width: number, height: number }, 
-    target: { width: number, height: number}) {
-        return { 
-            x: viewport.width / target.width, 
-            y: viewport.height / target.height
-        };
 }
