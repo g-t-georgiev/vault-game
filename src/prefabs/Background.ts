@@ -1,5 +1,4 @@
-import { /*DisplayObject,*/ Sprite, Texture } from 'pixi.js';
-/*import { centerObjects } from '../utils/misc';*/
+import { Sprite, Texture } from 'pixi.js';
 
 import { ISceneResizeParams } from '../core/Scene';
 
@@ -20,6 +19,5 @@ export default class Background extends Sprite {
         this.x = width / 2;
         this.y = height / 2;
         this.anchor.set(0.5);
-        // centerObjects(this as unknown as DisplayObject);
     }
 }
