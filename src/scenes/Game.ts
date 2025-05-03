@@ -38,7 +38,7 @@ export default class Game extends Scene {
         if (!this.mainContainer) {
             if ('__PIXI_APP__' in window) {
                 let app = window.__PIXI_APP__ as Application;
-                app.renderer.resize(window.innerWidth, window.innerHeight);
+                app.renderer.resize(screen.width, screen.height);
             }
             this.mainContainer = new Background(Assets.get('bg'));
             let resizeParams = {
