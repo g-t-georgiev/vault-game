@@ -1,38 +1,32 @@
 import { Assets, Sprite, Container, DisplayObject } from 'pixi.js';
 import gsap from 'gsap';
 
-import { Debug } from '../utils/debug';
-
 export default class DoorHandle extends Container {
 
     private handle!: Sprite;
-    private handleShadow!: Sprite;
-    private handleShadowOffset = { x: 5, y: 12 };
+    private shadow!: Sprite;
 
     constructor() {
         super();
+
         this.handle = new Sprite(Assets.get('handle'));
         this.handle.anchor.set(0.5);
-        this.handleShadow = new Sprite(Assets.get('handleShadow'));
-        this.handleShadow.anchor.set(0.5);
-        this.handleShadow.position.set(
-            this.handleShadowOffset.x,
-            this.handleShadowOffset.y
-        );
+
+        this.shadow = new Sprite(Assets.get('handleShadow'));
+        this.shadow.anchor.set(0.5);
+        this.shadow.pivot.set(-5, -15);
+    
         this.addChild(
-            this.handleShadow as unknown as DisplayObject,
+            this.shadow as unknown as DisplayObject,
             this.handle as unknown as DisplayObject
         );
     }
 
     async rotate(step: number) {
-        return gsap.to(this, {
+        return gsap.to([this.handle, this.shadow], {
             angle: `+=${step}`,
             duration: 0.3,
             ease: 'power2.out',
-            onUpdate: () => {
-                this.onUpdate();
-            },
             onComplete: () => {
                 this.onComplete();
             }
@@ -44,20 +38,17 @@ export default class DoorHandle extends Container {
         duration: number,
         direction: -1 | 0 | 1
     ) {
-        let normalizedRotation = Math.abs(this.angle) % 360;
-        let currentDirection = Math.sign(this.angle);
+        let normalizedRotation = Math.abs(this.handle.angle) % 360;
+        let currentDirection = Math.sign(this.handle.angle);
         let remainingToFullRotation = 
             currentDirection == direction 
                 ? 360 - normalizedRotation
                 : normalizedRotation;
         let fullResolutions = 360 * rounds + remainingToFullRotation;
-        return gsap.to(this, {
+        return gsap.to([this.handle, this.shadow], {
             angle: `+=${fullResolutions * direction}`,
             duration: duration,
             ease: 'power2.out',
-            onUpdate: () => {
-                this.onUpdate();
-            },
             onComplete: () => {
                 this.onComplete();
             },
@@ -68,12 +59,8 @@ export default class DoorHandle extends Container {
         gsap.killTweensOf(this, 'angle');
     }
 
-    private onUpdate() {
-        // TODO: Modify shadow offset to be more realistic during rotation
-    }
-
     private onComplete() {
-        this.angle = this.angle % 360;
-        Debug.log(this.angle);
+        this.handle.angle = this.handle.angle % 360;
+        // Debug.log(this.angle);
     }
 }
