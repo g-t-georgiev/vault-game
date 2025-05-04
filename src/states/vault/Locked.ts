@@ -1,5 +1,4 @@
 import { Assets, Container, DisplayObject } from 'pixi.js';
-import gsap from 'gsap';
 
 import { Debug } from '../../utils/debug';
 
@@ -60,8 +59,8 @@ export class Locked extends State {
                 this.handle.interactive = false;
                 this.handle.eventMode = 'none';
                 const resetRotationDir = (this.vaultLock.lastDirection * -1) as -1 | 0 | 1;
-                await this.rotateHandleFast(6, 1, resetRotationDir);
-                gsap.killTweensOf(this.handle);
+                await this.handle.rotateNTimes(6, 1, resetRotationDir);
+                this.handle.killRotationTweens();
                 this.handle.interactive = true;
                 this.handle.eventMode = 'static';
                 this.timer.reset();
@@ -87,56 +86,16 @@ export class Locked extends State {
     }
 
     async unload(): Promise<void> {
-        gsap.killTweensOf(this.handle);
+        this.handle.killRotationTweens();
     }
 
     private async rotateHandleCounterClockwise() {
-        await this.rotateHandle(-ROTATION_STEP);
+        await this.handle.rotate(-ROTATION_STEP);
         await this.vaultLock.tryToUnlock(1, 'counterclockwise');
     }
 
     private async rotateHandleClockwise() {
-        await this.rotateHandle(ROTATION_STEP);
+        await this.handle.rotate(ROTATION_STEP);
         await this.vaultLock.tryToUnlock(1, 'clockwise');
-    }
-
-    private async rotateHandle(step: number) {
-        return gsap.to(this.handle, {
-            angle: `+=${step}`,
-            duration: 0.3,
-            ease: 'power2.out',
-            onUpdate: () => {
-                this.handle.onRotate();
-            },
-            onComplete: () => {
-                this.handle.onRotateComplete();
-            }
-        });
-    }
-
-    private async rotateHandleFast(
-        rounds: number,
-        duration: number,
-        direction: -1 | 0 | 1
-    ) {
-        // remove current rotation angle
-        // and multiply by direction factor
-        let rotation = (
-            direction < 0 
-                ? 360 * rounds + this.handle.angle
-                : 360 * rounds - this.handle.angle
-        ) * direction;
-
-        return gsap.to(this.handle, {
-            angle: `+=${rotation}`,
-            duration: duration,
-            ease: 'power2.out',
-            onUpdate: () => {
-                this.handle.onRotate();
-            },
-            onComplete: () => {
-                this.handle.onRotateComplete();
-            },
-        });
     }
 }
