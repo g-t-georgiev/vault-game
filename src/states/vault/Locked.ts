@@ -11,8 +11,6 @@ import Button from '../../prefabs/Button';
 import VaultLock from '../../prefabs/VaultLock';
 import Timer from '../../prefabs/Timer';
 
-// const R2D = 180 / Math.PI;
-// const D2R = Math.PI / 180;
 const ROTATION_STEP = 60;
 
 export class Locked extends State {
