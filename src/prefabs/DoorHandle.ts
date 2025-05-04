@@ -51,10 +51,8 @@ export default class DoorHandle extends Container {
                 ? 360 - normalizedRotation
                 : normalizedRotation;
         let fullResolutions = 360 * rounds + remainingToFullRotation;
-        let rotation = fullResolutions * direction;
-        Debug.log(currentDirection == direction, direction, currentDirection, remainingToFullRotation, this.angle, rotation);
         return gsap.to(this, {
-            angle: `+=${rotation}`,
+            angle: `+=${fullResolutions * direction}`,
             duration: duration,
             ease: 'power2.out',
             onUpdate: () => {
@@ -67,7 +65,7 @@ export default class DoorHandle extends Container {
     }
 
     killRotationTweens() {
-        gsap.killTweensOf(this, "angle");
+        gsap.killTweensOf(this, 'angle');
     }
 
     private onUpdate() {
