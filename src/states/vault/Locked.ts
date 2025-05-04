@@ -50,7 +50,6 @@ export class Locked extends State {
         this.vaultLock = new VaultLock({
             onInit: async () => {
                 Debug.log('VAULT_LOCK_INIT');
-                this.handle.angle = 0;
             },
             onReset: async () => {
                 Debug.log('VAULT_LOCK_RESET');
