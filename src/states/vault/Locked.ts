@@ -1,4 +1,4 @@
-import { Assets, Container, DisplayObject, FederatedPointerEvent } from 'pixi.js';
+import { Assets, DisplayObject, FederatedPointerEvent } from 'pixi.js';
 
 import { Debug } from '../../utils/debug';
 
@@ -6,7 +6,6 @@ import State, { IStateUtils } from '../../core/State';
 
 import Door from '../../prefabs/DoorClosed';
 import Handle from '../../prefabs/DoorHandle';
-import Button from '../../prefabs/Button';
 
 import VaultLock from '../../prefabs/VaultLock';
 import Timer from '../../prefabs/Timer';
@@ -14,7 +13,7 @@ import Timer from '../../prefabs/Timer';
 const ROTATION_STEP = 60;
 
 export class Locked extends State {
-    
+
     private door!: Door;
     private handle!: Handle;
 
