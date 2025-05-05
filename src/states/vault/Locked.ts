@@ -83,11 +83,9 @@ export class Locked extends State {
 
     private setHandleInteractions(toggle: boolean) {
         if (toggle) {
-            this.handle.interactive = true;
             this.handle.eventMode = 'static';
             this.handle.on('pointerdown', this.onHandleClick, this);
         } else {
-            this.handle.interactive = false;
             this.handle.eventMode = 'none';
             this.handle.off('pointerdown', this.onHandleClick, this);
         }
