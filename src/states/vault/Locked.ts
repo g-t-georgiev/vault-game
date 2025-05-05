@@ -1,4 +1,4 @@
-import { Assets, Container, DisplayObject } from 'pixi.js';
+import { Assets, Container, DisplayObject, FederatedPointerEvent } from 'pixi.js';
 
 import { Debug } from '../../utils/debug';
 
@@ -14,9 +14,9 @@ import Timer from '../../prefabs/Timer';
 const ROTATION_STEP = 60;
 
 export class Locked extends State {
+    
     private door!: Door;
     private handle!: Handle;
-    private rotateHandleBtns!: Container;
 
     private vaultLock!: VaultLock;
     private timer!: Timer;
@@ -33,46 +33,31 @@ export class Locked extends State {
         this.handle.position.set(-31, -2);
         this.door.addChild(this.handle as unknown as DisplayObject);
 
-        const rotateHandleToLeftBtn = new Button('counterclockwise', 0, 0, 30);
-        rotateHandleToLeftBtn.on('pointertap', this.rotateHandleCounterClockwise, this);
-        rotateHandleToLeftBtn.x -= 122;
-
-        const rotateHandleToRightBtn = new Button('clockwise', 0, 0, 30);
-        rotateHandleToRightBtn.on('pointertap', this.rotateHandleClockwise, this);
-        rotateHandleToRightBtn.x += 100;
-
-        this.rotateHandleBtns = new Container();
-        this.rotateHandleBtns.addChild(
-            rotateHandleToLeftBtn as unknown as DisplayObject,
-            rotateHandleToRightBtn as unknown as DisplayObject
-        );
-
         this.vaultLock = new VaultLock({
             onInit: async () => {
                 Debug.log('VAULT_LOCK_INIT');
+                this.setHandleInteractions(true);
             },
             onReset: async () => {
                 Debug.log('VAULT_LOCK_RESET');
-                this.handle.interactive = false;
-                this.handle.eventMode = 'none';
+                this.setHandleInteractions(false);
                 const resetRotationDir = (this.vaultLock.lastDirection * -1) as -1 | 0 | 1;
                 await this.handle.rotateNTimes(6, 1, resetRotationDir);
                 this.handle.killRotationTweens();
-                this.handle.interactive = true;
-                this.handle.eventMode = 'static';
+                this.setHandleInteractions(true);
                 this.timer.reset();
                 this.timer.start();
             },
             onUnlock: async () => {
                 Debug.log('VAULT_LOCK_UNLOCKED');
+                this.setHandleInteractions(false);
                 this.timer.stop();
                 this.utils.requestStateChange('Unlocked');
             },
         });
 
         this.addChild(
-            this.door as unknown as DisplayObject,
-            this.rotateHandleBtns as unknown as DisplayObject
+            this.door as unknown as DisplayObject
         );
     }
 
@@ -86,13 +71,26 @@ export class Locked extends State {
         this.handle.killRotationTweens();
     }
 
-    private async rotateHandleCounterClockwise() {
-        await this.handle.rotate(-ROTATION_STEP);
-        await this.vaultLock.tryToUnlock(1, 'counterclockwise');
+    private async onHandleClick(ev: FederatedPointerEvent) {
+        const local = this.handle.toLocal(ev.global);
+        if (local.x < 0) {
+            await this.handle.rotate(-ROTATION_STEP);
+            await this.vaultLock.tryToUnlock(1, 'counterclockwise');
+        } else {
+            await this.handle.rotate(ROTATION_STEP);
+            await this.vaultLock.tryToUnlock(1, 'clockwise');
+        }
     }
 
-    private async rotateHandleClockwise() {
-        await this.handle.rotate(ROTATION_STEP);
-        await this.vaultLock.tryToUnlock(1, 'clockwise');
+    private setHandleInteractions(toggle: boolean) {
+        if (toggle) {
+            this.handle.interactive = true;
+            this.handle.eventMode = 'static';
+            this.handle.on('pointerdown', this.onHandleClick, this);
+        } else {
+            this.handle.interactive = false;
+            this.handle.eventMode = 'none';
+            this.handle.off('pointerdown', this.onHandleClick, this);
+        }
     }
 }
