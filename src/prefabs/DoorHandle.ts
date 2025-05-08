@@ -1,6 +1,8 @@
 import { Assets, Sprite, Container, DisplayObject } from 'pixi.js';
 import gsap from 'gsap';
 
+const SHADOW_OFFSET = { x: 5, y: 15 };
+
 export default class DoorHandle extends Container {
 
     private handle!: Sprite;
@@ -14,7 +16,7 @@ export default class DoorHandle extends Container {
 
         this.shadow = new Sprite(Assets.get('handleShadow'));
         this.shadow.anchor.set(0.5);
-        this.shadow.pivot.set(-5, -15);
+        this.shadow.position.set(SHADOW_OFFSET.x, SHADOW_OFFSET.y);
     
         this.addChild(
             this.shadow as unknown as DisplayObject,
@@ -23,14 +25,34 @@ export default class DoorHandle extends Container {
     }
 
     async rotate(step: number) {
-        return gsap.to([this.handle, this.shadow], {
-            angle: `+=${step}`,
+        return gsap.timeline({
             duration: 0.3,
             ease: 'power2.out',
-            onComplete: () => {
-                this.onComplete();
+            defaults: {
+                angle: `+=${step}`
             }
-        });
+        })
+        .to(this.handle, {})
+        .to(this.shadow, { delay: 0.01 }, '<');
+        // return Promise.all([
+        //     gsap.to(this.handle, {
+        //         angle: `+=${step}`,
+        //         duration: 0.3,
+        //         ease: 'power2.out',
+        //         onComplete: () => {
+        //             this.onComplete();
+        //         }
+        //     }),
+        //     gsap.to(this.shadow, {
+        //         angle: `+=${step}`,
+        //         duration: 0.3,
+        //         delay: 0.01,
+        //         ease: 'power2.out',
+        //         onComplete: () => {
+        //             this.onComplete();
+        //         }
+        //     })
+        // ]);
     }
 
     async rotateNTimes(
