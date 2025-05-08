@@ -64,7 +64,7 @@ export default class Game extends Scene {
 
         if (!this.timer) {
             this.timer = Timer.getInstance();
-            this.timer.position.set(-452, -60);
+            this.timer.position.set(-433, -56);
             this.mainContainer.addChild(this.timer as unknown as DisplayObject);
         } else {
             this.timer.reset();
