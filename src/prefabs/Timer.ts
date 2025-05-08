@@ -1,4 +1,4 @@
-import { Container, DisplayObject, Graphics, Text } from 'pixi.js';
+import { Container, DisplayObject, /*Graphics,*/ Text } from 'pixi.js';
 
 export default class Timer extends Container {
     private static instance: Timer | null = null;
@@ -16,7 +16,7 @@ export default class Timer extends Container {
     protected time = 0;
     protected isRunning = false;
 
-    private timerPad!: Graphics;
+    // private timerPad!: Graphics;
     private timerText!: Text;
 
     constructor() {
@@ -25,26 +25,26 @@ export default class Timer extends Container {
         this.timerText = new Text(this.formatTime(this.time), {
             fontFamily: 'Share Tech Mono',
             fontWeight: '600',
-            fontSize: 22,
+            fontSize: 14,
             lineHeight: 1,
             fill: 0xff0000,
         });
-        this.timerText.scale.set(1, 1.35);
-        this.timerText.position.set(5, 5);
+        // this.timerText.scale.set(1, 1.35);
+        // this.timerText.position.set(5, 5);
 
-        this.timerPad = new Graphics();
-        this.timerPad.beginFill(0x000000);
-        this.timerPad.drawRoundedRect(
-            0,
-            0,
-            this.timerText.width + 5,
-            this.timerText.height + 5,
-            5
-        );
-        this.timerPad.endFill();
+        // this.timerPad = new Graphics();
+        // this.timerPad.beginFill(0x000000);
+        // this.timerPad.drawRoundedRect(
+        //     0,
+        //     0,
+        //     this.timerText.width + 5,
+        //     this.timerText.height + 5,
+        //     5
+        // );
+        // this.timerPad.endFill();
 
         this.addChild(
-            this.timerPad as unknown as DisplayObject,
+            // this.timerPad as unknown as DisplayObject,
             this.timerText as unknown as DisplayObject
         );
     }
