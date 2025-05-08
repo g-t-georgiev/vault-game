@@ -30,6 +30,9 @@ export default class DoorHandle extends Container {
             ease: 'power2.out',
             defaults: {
                 angle: `+=${step}`
+            },
+            onComplete: () => {
+                this.onComplete();
             }
         })
         .to(this.handle, {})
@@ -83,6 +86,7 @@ export default class DoorHandle extends Container {
 
     private onComplete() {
         this.handle.angle = this.handle.angle % 360;
+        this.shadow.angle = this.shadow.angle % 360;
         // Debug.log(this.angle);
     }
 }
