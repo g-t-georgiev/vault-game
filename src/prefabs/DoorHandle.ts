@@ -37,25 +37,6 @@ export default class DoorHandle extends Container {
         })
         .to(this.handle, {})
         .to(this.shadow, { delay: 0.01 }, '<');
-        // return Promise.all([
-        //     gsap.to(this.handle, {
-        //         angle: `+=${step}`,
-        //         duration: 0.3,
-        //         ease: 'power2.out',
-        //         onComplete: () => {
-        //             this.onComplete();
-        //         }
-        //     }),
-        //     gsap.to(this.shadow, {
-        //         angle: `+=${step}`,
-        //         duration: 0.3,
-        //         delay: 0.01,
-        //         ease: 'power2.out',
-        //         onComplete: () => {
-        //             this.onComplete();
-        //         }
-        //     })
-        // ]);
     }
 
     async rotateNTimes(
