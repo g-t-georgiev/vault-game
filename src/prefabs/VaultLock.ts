@@ -68,7 +68,7 @@ export default class VaultLock {
     async tryToUnlock(step = 1, direction: HandleRotationDirection) {
 
         if (this.isUnlocked) return;
-
+        
         const [steps, dir] = this.unlockCombination[this.combinationPairIndex];
 
         switch (direction) {
@@ -92,7 +92,9 @@ export default class VaultLock {
             this.combinationPairIndex++;
             if (this.combinationPairIndex >= this.unlockCombination.length) {
                 this._isUnlocked = true;
-                if (typeof this.onUnlock == 'function') await this.onUnlock();
+                if (typeof this.onUnlock == 'function') {
+                    await this.onUnlock();
+                }
             }
         }
     }
