@@ -9,6 +9,7 @@ const THRESHOLD_HEIGHT = { min: 380, max: 670 };
 export default class Background extends Sprite {
     constructor(texture: Texture) {
         super(texture);
+        this.anchor.set(0.5);
     }
 
     resize(params: ISceneResizeParams) {
@@ -34,9 +35,7 @@ export default class Background extends Sprite {
         };
 
         let scaleFactor = Math.min(interpolatedScale.x, interpolatedScale.y);
-
         this.scale.set(scaleFactor);
-        this.anchor.set(0.5);
 
         let offsetX = (safeAreaCenterX - this.texture.width * 0.5) * scaleFactor;
         let offsetY = (safeAreaCenterY - this.texture.height * 0.5) * scaleFactor;
