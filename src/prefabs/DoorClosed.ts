@@ -1,8 +1,8 @@
 import { Sprite, Texture } from 'pixi.js';
 import gsap from 'gsap';
 
-const FADE_IN_DURATION = 1.2;
-const FADE_OUT_DURATION = 1;
+const FADE_IN_DURATION = 1;
+const FADE_OUT_DURATION = 0.5;
 
 export default class DoorClosed extends Sprite {
 
