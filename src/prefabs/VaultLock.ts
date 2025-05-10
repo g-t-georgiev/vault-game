@@ -66,6 +66,9 @@ export default class VaultLock {
     }
 
     async tryToUnlock(step = 1, direction: HandleRotationDirection) {
+
+        if (this.isUnlocked) return;
+
         const [steps, dir] = this.unlockCombination[this.combinationPairIndex];
 
         switch (direction) {
