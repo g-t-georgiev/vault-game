@@ -15,7 +15,7 @@ export default class Glitter extends Sprite {
         this.animationTl = gsap.timeline({
             paused: true,
             repeat: -1,
-            repeatDelay: getRandomNumberInInterval(0.1, 0),
+            repeatDelay: getRandomNumberInInterval(0.2, 0),
             yoyo: true,
             defaults: { 
                 ease: 'power2.out', 
@@ -40,7 +40,7 @@ export default class Glitter extends Sprite {
                 duration: 0.5 
             }, '<');
 
-        return gsap.delayedCall(getRandomNumberInInterval(0.3, 0.1), () => this.animationTl.play());
+        return gsap.delayedCall(getRandomNumberInInterval(0.5, 0.2), () => this.animationTl.play());
     }
 
     killAnimation() {
