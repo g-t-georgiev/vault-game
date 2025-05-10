@@ -127,6 +127,7 @@ export default class Game extends Scene {
             },
             onReset: async () => {
                 Debug.log('VAULT_LOCK_RESET');
+                this.timer.reset();
                 await Promise.all([
                     this.door.closed.fadeIn(),
                     this.door.opened.fadeOut()
@@ -134,10 +135,8 @@ export default class Game extends Scene {
                 this.setHandleInteractions(false);
                 const resetRotationDir = (this.vaultLock.lastDirection * -1) as -1 | 0 | 1;
                 await this.door.handle.rotateNTimes(6, 1, resetRotationDir);
-                this.door.handle.killRotationTweens();
-                this.setHandleInteractions(true);
-                this.timer.reset();
                 this.timer.start();
+                this.setHandleInteractions(true);
             },
             onUnlock: async () => {
                 Debug.log('VAULT_LOCK_UNLOCKED');
@@ -157,14 +156,17 @@ export default class Game extends Scene {
     }
 
     private async onHandleClick(ev: FederatedPointerEvent) {
+
         if (this.vaultLock.isUnlocked) return;
+
         const local = this.door.handle.toLocal(ev.global);
+
         if (local.x < 0) {
             await this.door.handle.rotate(-ROTATION_STEP);
-            this.vaultLock.tryToUnlock(1, 'counterclockwise');
+            await this.vaultLock.tryToUnlock(1, 'counterclockwise');
         } else {
             await this.door.handle.rotate(ROTATION_STEP);
-            this.vaultLock.tryToUnlock(1, 'clockwise');
+            await this.vaultLock.tryToUnlock(1, 'clockwise');
         }
     }
 
