@@ -3,6 +3,14 @@ import { DisplayObject, Sprite } from 'pixi.js';
 export const R2D = 180 / Math.PI;
 export const D2R = Math.PI / 180;
 
+export function getRandomNumberInInterval(max: number, min: number, isFloat: boolean = true): number {
+    let random = Math.random();
+    let maxInterval = max - min + 1;
+    return isFloat 
+        ? random * maxInterval + min 
+        : Math.floor(random * maxInterval) + min;
+}
+
 export function getLerpT(value: number, min: number, max: number): number {
     return Math.min(Math.max((value - min) / (max - min), 0), 1);
 };
