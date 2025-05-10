@@ -125,8 +125,10 @@ export default class Game extends Scene {
             },
             onReset: async () => {
                 Debug.log('VAULT_LOCK_RESET');
-                this.door.closed.fadeIn();
-                await this.door.opened.fadeOut();
+                await Promise.all([
+                    this.door.closed.fadeIn(),
+                    this.door.opened.fadeOut()
+                ]);
                 this.setHandleInteractions(false);
                 const resetRotationDir = (this.vaultLock.lastDirection * -1) as -1 | 0 | 1;
                 await this.door.handle.rotateNTimes(6, 1, resetRotationDir);
@@ -139,8 +141,10 @@ export default class Game extends Scene {
                 Debug.log('VAULT_LOCK_UNLOCKED');
                 this.setHandleInteractions(false);
                 this.timer.stop();
-                this.door.closed.fadeOut();
-                await this.door.opened.fadeIn();
+                await Promise.all([
+                    this.door.closed.fadeOut(),
+                    this.door.opened.fadeIn()
+                ]);
                 this.sparkles.forEach((sparkle) => sparkle.playAnimation());
                 await wait(5);
                 this.sparkles.forEach((sparkle) => sparkle.killAnimation());
