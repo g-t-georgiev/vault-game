@@ -56,6 +56,7 @@ export default class Game extends Scene {
         await this.init();
 
         this.timer.start();
+        this.door.handle.on('pointerdown', this.onHandleClick, this);
     }
 
     update(elapsedMS: number) {
@@ -69,6 +70,7 @@ export default class Game extends Scene {
     async unload() {
         Timer.removeInstance();
         this.door.handle.killRotationTweens();
+        this.door.handle.off('pointerdown', this.onHandleClick, this);
         this.sparkles.forEach(sparkle => sparkle.killAnimation());
     }
 
@@ -155,13 +157,14 @@ export default class Game extends Scene {
     }
 
     private async onHandleClick(ev: FederatedPointerEvent) {
+        if (this.vaultLock.isUnlocked) return;
         const local = this.door.handle.toLocal(ev.global);
         if (local.x < 0) {
             await this.door.handle.rotate(-ROTATION_STEP);
-            await this.vaultLock.tryToUnlock(1, 'counterclockwise');
+            this.vaultLock.tryToUnlock(1, 'counterclockwise');
         } else {
             await this.door.handle.rotate(ROTATION_STEP);
-            await this.vaultLock.tryToUnlock(1, 'clockwise');
+            this.vaultLock.tryToUnlock(1, 'clockwise');
         }
     }
 
@@ -169,11 +172,9 @@ export default class Game extends Scene {
         if (toggle) {
             this.door.handle.eventMode = 'static';
             this.door.handle.cursor = 'pointer';
-            this.door.handle.on('pointerdown', this.onHandleClick, this);
         } else {
             this.door.handle.eventMode = 'none';
             this.door.handle.cursor = 'default';
-            this.door.handle.off('pointerdown', this.onHandleClick, this);
         }
     }
 }
