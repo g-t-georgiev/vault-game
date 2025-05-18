@@ -6,7 +6,7 @@ This is a simple game project created as part of a job application interview tas
 
 It utilizes a simple 2D game framework for [PixiJS](https://pixijs.com) using [Vite⚡](https://vitejs.dev/) and [TypeScript](https://www.typescriptlang.org/).
 
-**DISCLAIMER: I do not own or have any part in the creation of the said boilerplate.
+*DISCLAIMER: I do not own or have any part in the creation of the said boilerplate.*
 
 ## Project (as-is) requirements and description
 
