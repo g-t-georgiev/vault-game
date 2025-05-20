@@ -25,7 +25,7 @@ Additionally there is a timer displaying the time it took the user to open the v
 When the right combination of actions (rotations of the wheel) is being executed, the door opens, displaying the treasures hidden behind. A simple glittering animation starts playing, simulating the reflected light effect from the gold cubes. After 5 seconds the vault returns to the "locked" state again, a reset is triggered (a few quick rotations of the wheel) and the game restarts (timer resets and new opening combination is created).
 
 ### Github Pages
-<a href="https://g-t-georgiev.github.io/vault-game/" target="_blank">This</a> is the link to the GH pages demo. It is for demonstrational purposes only.
+<a href="https://g-t-georgiev.github.io/vault-game/" target="_blank">This</a> is the link to the GH pages demo.
 
 ### Commands
 
